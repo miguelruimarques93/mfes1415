@@ -1,0 +1,34 @@
+class AccessCardTest
+	instance variables
+		ac: AccessCard := new AccessCard(0, new Date(31, 12, 2014));
+	operations
+		private assertTrue: bool ==> ()
+    assertTrue(cond) == return
+    pre cond;
+    
+    private assertFalse: bool ==> ()
+    assertFalse(cond) == return
+    pre not cond;
+		
+		private testValidCard: () ==> ()
+		testValidCard() ==
+		(
+			
+			assertTrue(ac.isValid(new Date(31, 12, 2014)));
+			assertFalse(ac.isValid(new Date(1, 1, 2015)));
+			assertTrue(ac.isValid(new Date(30, 12, 2014)));
+			assertTrue(ac.isValid(new Date(31, 10, 2014)));
+			assertTrue(ac.isValid(new Date(31, 12, 2013)));
+			
+			
+			assertTrue(ac.getID() = 0);
+			assertFalse(ac.getID() = 1);
+			assertTrue(ac.getExpirationDate().isEqual(new Date(31, 12, 2014)));
+		);
+		
+		public static main: () ==> ()
+    main() ==
+    (
+      new AccessCardTest().testValidCard();
+    );
+end AccessCardTest

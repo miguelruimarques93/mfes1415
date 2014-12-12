@@ -1,14 +1,29 @@
 class AccessCard
-types
--- TODO Define types here
-values
--- TODO Define values here
-instance variables
--- TODO Define instance variables here
-operations
--- TODO Define operations here
-functions
--- TODO Define functiones here
-traces
--- TODO Define Combinatorial Test Traces here
+	instance variables
+		id: nat;
+		expirationDate: Date;
+	operations
+		public AccessCard : nat * Date ==> AccessCard
+		AccessCard(uniqueID, date) == 
+		(
+			id := uniqueID;
+			expirationDate := date;
+			return self;
+		);
+		
+		public isValid : Date ==> bool
+		isValid(date) ==
+		(
+			return expirationDate.isGreaterOrEqual(date);
+		);
+		
+		public getID : () ==> nat
+		getID() == (
+			return self.id;
+		);
+		
+		public getExpirationDate : () ==> Date
+		getExpirationDate() == (
+			return self.expirationDate;
+		);
 end AccessCard
