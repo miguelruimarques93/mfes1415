@@ -3,6 +3,10 @@ class TestAll
 		public static main: () ==> ()
     main() ==
     (
+    	IO`println(" ");
+    	IO`println("**");
+    	IO`println("** DateTest");
+    	IO`println("**");
     	DateTest`main();
     );
 

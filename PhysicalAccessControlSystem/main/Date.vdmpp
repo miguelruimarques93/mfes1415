@@ -3,26 +3,40 @@ class Date
 instance variables
 	day: nat1;
 	month: nat1;
-	year: int;
-	
-inv
-	day <= 31 and
-	month <= 12 and
-	if month in set {4, 6, 9, 11}
-	then day <= 30
-	else (month = 2) => if isLeapYear(year) then (day <= 29) else (day <= 28)
+	year: nat;
 	
 operations
-	public Date : nat1 * nat1 * int ==> Date
-	Date(d, m, y) == (
+	public Date : nat1 * nat1 * nat ==> Date
+	Date(d, m, y) == 
+	(
 		day := d;
 		month := m;
 		year := y;
 		return self;
+	)
+	pre d <= 31 and
+	m <= 12 and
+	if m in set {4, 6, 9, 11}
+	then d <= 30
+	else (m = 2) => if isLeapYear(y) then (d <= 29) else (d <= 28);
+	
+	public getDay : () ==> nat1
+	getDay() == (
+		return self.day;
+	);
+	
+	public getMonth : () ==> nat1
+	getMonth() == (
+		return self.month;
+	);
+	
+	public getYear : () ==> nat
+	getYear() == (
+		return self.year;
 	);
 	
 functions
-	public static isLeapYear : int -> bool
+	public static isLeapYear : nat -> bool
 	isLeapYear(y) == (
 		if y mod 100 = 0 then y mod 400 = 0 else y mod 4 = 0
 	);	
