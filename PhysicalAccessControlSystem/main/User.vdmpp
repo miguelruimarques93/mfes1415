@@ -1,14 +1,45 @@
 class User
-types
--- TODO Define types here
-values
--- TODO Define values here
 instance variables
--- TODO Define instance variables here
+	accessCard: [AccessCard];
+	name: seq of char;
 operations
--- TODO Define operations here
+	public User : seq of char ==> User
+	User(n) == 
+	(
+		name := n;
+		accessCard := nil;
+		return self;
+	);
+	
+	public User : seq of char * AccessCard ==> User
+	User(n, ac) ==
+	(
+		name := n;
+		accessCard := ac;
+		return self;
+	);
+	
+	public setAccessCard : AccessCard ==> User
+	setAccessCard(ac) ==
+	(
+		accessCard := ac;
+		return self;
+	);
+	
+	public removeAccessCard : () ==> User
+	removeAccessCard() ==
+	(
+		accessCard := nil;
+		return self;
+	);
+	
+	public hasAccessCard : () ==> bool
+	hasAccessCard() ==
+	(
+		return accessCard <> nil;
+	);
+	
+	
 functions
--- TODO Define functiones here
-traces
--- TODO Define Combinatorial Test Traces here
+
 end User

@@ -14,6 +14,12 @@ class TestAll
     	IO`println("** AccessCardTest");
     	IO`println("**");
     	AccessCardTest`main();
+    	
+    	IO`println(" ");
+    	IO`println("**");
+    	IO`println("** UserTest");
+    	IO`println("**");
+    	UserTest`main();
     );
 
 end TestAll

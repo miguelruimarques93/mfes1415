@@ -1,0 +1,21 @@
+class UserTest
+
+instance variables
+	u : User := new User("User 1");
+
+operations
+
+	private testUser : () ==> ()
+	testUser() ==
+	(
+		()
+	);
+	
+	public static main : () ==> ()
+	main() == 
+	(
+		let ut : UserTest = new UserTest() in (
+			ut.testUser();
+		);
+	);
+end UserTest
