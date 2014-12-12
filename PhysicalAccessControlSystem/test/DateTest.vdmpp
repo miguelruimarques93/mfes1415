@@ -23,15 +23,36 @@ class DateTest
 			IO`println(new Date(28, 2, 2001));
 			IO`println(new Date(30, 4, 2001));
 			
+			
+		);
+		
+		private testGetters : () ==> ()
+		testGetters() == 
+		(
 			assertTrue(d.getDay() = 30);
 			assertTrue(d.getMonth() = 1);
 			assertTrue(d.getYear() = 2010);
 		);
 		
+		private testComparators : () ==> ()
+		testComparators() ==
+		(
+			let d1 : Date = new Date(1, 1, 2000), 
+				  d2 : Date = new Date(1, 1, 2010) in (
+				assertTrue(d1.isLessOrEqual(d2));
+				assertTrue(d1.isLessOrEqual(d1));
+				assertTrue(d2.isGreater(d1));
+			);
+		);
+		
 		public static main: () ==> ()
     main() ==
     (
-      new DateTest().testLeapYear();
+    	let dt : DateTest = new DateTest() in (
+      	dt.testLeapYear();
+      	dt.testGetters();
+      	dt.testComparators();
+      );
     );
 
 end DateTest
