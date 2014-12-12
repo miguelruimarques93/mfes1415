@@ -1,0 +1,27 @@
+class Assert
+
+	operations
+		
+		/**
+		* Asserts true.
+		*
+		* @param bool
+		*
+		* @return nothing
+		*/
+		public static assertTrue: bool ==> ()
+		assertTrue(cond) == return
+		pre cond;
+		
+		/**
+		* Asserts false.
+		*
+		* @param bool
+		*
+		* @return nothing
+		*/    
+		public static assertFalse: bool ==> ()
+		assertFalse(cond) == return
+		pre not cond;
+
+end Assert

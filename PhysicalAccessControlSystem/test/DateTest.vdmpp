@@ -1,31 +1,24 @@
 class DateTest
 	instance variables
 		d: Date := new Date(30, 1, 2010)
-	
+
 	operations
-		private assertTrue: bool ==> ()
-    assertTrue(cond) == return
-    pre cond;
-    
-    private assertFalse: bool ==> ()
-    assertFalse(cond) == return
-    pre not cond;
-		
+
 		private testLeapYear: () ==> ()
 		testLeapYear() ==
 		(
-			assertTrue(Date`isLeapYear(2000));
-			assertTrue(Date`isLeapYear(2004));
-			assertFalse(Date`isLeapYear(2100));
-			assertFalse(Date`isLeapYear(2001));
+			Assert`assertTrue(Date`isLeapYear(2000));
+			Assert`assertTrue(Date`isLeapYear(2004));
+			Assert`assertFalse(Date`isLeapYear(2100));
+			Assert`assertFalse(Date`isLeapYear(2001));
 			
 			IO`println(new Date(29, 2, 2000));
 			IO`println(new Date(28, 2, 2001));
 			IO`println(new Date(30, 4, 2001));
 			
-			assertTrue(d.getDay() = 30);
-			assertTrue(d.getMonth() = 1);
-			assertTrue(d.getYear() = 2010);
+			Assert`assertTrue(d.getDay() = 30);
+			Assert`assertTrue(d.getMonth() = 1);
+			Assert`assertTrue(d.getYear() = 2010);
 		);
 		
 		public static main: () ==> ()
