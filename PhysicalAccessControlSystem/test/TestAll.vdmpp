@@ -1,0 +1,9 @@
+class TestAll
+	operations
+		public static main: () ==> ()
+    main() ==
+    (
+    	DateTest`main();
+    );
+
+end TestAll

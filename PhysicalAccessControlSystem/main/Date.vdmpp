@@ -1,0 +1,29 @@
+class Date
+
+instance variables
+	day: nat1;
+	month: nat1;
+	year: int;
+	
+inv
+	day <= 31 and
+	month <= 12 and
+	if month in set {4, 6, 9, 11}
+	then day <= 30
+	else (month = 2) => if isLeapYear(year) then (day <= 29) else (day <= 28)
+	
+operations
+	public Date : nat1 * nat1 * int ==> Date
+	Date(d, m, y) == (
+		day := d;
+		month := m;
+		year := y;
+		return self;
+	);
+	
+functions
+	public static isLeapYear : int -> bool
+	isLeapYear(y) == (
+		if y mod 100 = 0 then y mod 400 = 0 else y mod 4 = 0
+	);	
+end Date

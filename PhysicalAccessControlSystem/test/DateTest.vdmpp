@@ -1,0 +1,26 @@
+class DateTest
+	operations
+		private assertTrue: bool ==> ()
+    assertTrue(cond) == return
+    pre cond;
+    
+    private assertFalse: bool ==> ()
+    assertFalse(cond) == return
+    pre not cond;
+		
+		private testLeapYear: () ==> ()
+		testLeapYear() ==
+		(
+			assertTrue(Date`isLeapYear(2000));
+			assertTrue(Date`isLeapYear(2004));
+			assertFalse(Date`isLeapYear(2100));
+			assertFalse(Date`isLeapYear(2001));
+		);
+		
+		public static main: () ==> ()
+    main() ==
+    (
+      new DateTest().testLeapYear();
+    );
+
+end DateTest
