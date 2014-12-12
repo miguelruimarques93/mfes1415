@@ -12,7 +12,11 @@ class AccessCardTest
 			Assert`assertTrue(ac.isValid(new Date(30, 12, 2014)));
 			Assert`assertTrue(ac.isValid(new Date(31, 10, 2014)));
 			Assert`assertTrue(ac.isValid(new Date(31, 12, 2013)));
-			
+		);
+		
+		private testGetters : () ==> ()
+		testGetters() == 
+		(
 			Assert`assertTrue(ac.getID() = 0);
 			Assert`assertFalse(ac.getID() = 1);
 			Assert`assertTrue(ac.getExpirationDate().isEqual(new Date(31, 12, 2014)));
@@ -21,6 +25,10 @@ class AccessCardTest
 		public static main: () ==> ()
     main() ==
     (
-      new AccessCardTest().testValidCard();
+      let ac1 : AccessCardTest = new AccessCardTest() in (
+      	ac1.testValidCard();
+      	ac1.testGetters();
+      );
     );
+    
 end AccessCardTest
