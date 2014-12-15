@@ -1,5 +1,20 @@
 class AccessRule
-instance variables
 
+instance variables
+	groupFacility: Utils`String;
+	groupUser: Utils`String;
 operations
+	public AccessRule : Utils`String * Utils`String ==> AccessRule
+	AccessRule(facs, users) == (
+		groupFacility := facs;
+		groupUser := users;
+		return self;
+	);
+	
+	public getGroupFacility : () ==> Utils`String
+	getGroupFacility() == return self.groupFacility;
+	
+	public getGroupUser : () ==> Utils`String
+	getGroupUser() == return self.groupUser;
+	
 end AccessRule
