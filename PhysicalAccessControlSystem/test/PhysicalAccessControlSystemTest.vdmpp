@@ -1,0 +1,12 @@
+class PhysicalAccessControlSystemTest
+instance variables
+
+operations
+
+		public static main: () ==> ()
+		main() ==
+		(
+			()
+		);
+
+end PhysicalAccessControlSystemTest

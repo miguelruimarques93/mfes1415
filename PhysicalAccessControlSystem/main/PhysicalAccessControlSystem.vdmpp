@@ -1,14 +1,66 @@
 class PhysicalAccessControlSystem
 types
--- TODO Define types here
-values
--- TODO Define values here
+	public User :: name: Utils`String
+	inv mk_User(n) == len n > 0;
+	
+	GroupUser = set of User;
+	
 instance variables
--- TODO Define instance variables here
+	lastId: nat := 0;
+
+	accessCards: set of AccessCard := {};
+	
+	groupUsers: map Utils`String to GroupUser := {|->};
+	
+	userAccessCard: map User to AccessCard := {|->};
+	
+	inv let users = getUsers() in ( forall user in set dom userAccessCard & user in set users );
+	inv rng userAccessCard subset accessCards;
+	inv forall ac in set accessCards & forall ac1 in set accessCards \ {ac} & ac1.getID() <> ac.getID();
+	
 operations
--- TODO Define operations here
-functions
--- TODO Define functions here
-traces
--- TODO Define Combinatorial Test Traces here
+
+	public createNewAccessCard: () ==> AccessCard
+	createNewAccessCard() == (
+		lastId := lastId + 1;
+		let ac: AccessCard = new AccessCard(lastId) in (
+			accessCards := accessCards union {ac};
+			return ac;
+		);
+	);
+	
+	public createNewTemporaryAccessCard: Date ==> AccessCard
+	createNewTemporaryAccessCard(expDate) == (
+		let newCard: AccessCard = createNewAccessCard() in (
+			newCard.setExpirationDate(expDate);
+			return newCard;
+		);
+	);
+	
+	public createNewUser : Utils`String ==> User
+	createNewUser(name) == (
+		let user = mk_User(name) in (
+			groupUsers := groupUsers munion { name |-> { user } };
+			return user;
+		);
+	)
+	pre forall user in set dunion rng groupUsers & user.name <> name;
+	
+	public createNewGroupOfUsers : Utils`String ==> ()
+	createNewGroupOfUsers(name) == (
+		groupUsers := groupUsers munion { name |-> { } };
+	)
+	pre not name in set dom groupUsers;
+	
+	public addUserToGroupOfUsers : Utils`String * User ==> ()
+	addUserToGroupOfUsers(groupName, user) == (
+		groupUsers(groupName) := groupUsers(groupName) union { user };
+	)
+	pre groupName in set dom groupUsers 
+	-- and user in set groupUsers(groupName)
+	and user in set dunion rng groupUsers;
+
+	private getUsers : () ==> set of User
+	getUsers() == return dunion rng groupUsers;
+	
 end PhysicalAccessControlSystem

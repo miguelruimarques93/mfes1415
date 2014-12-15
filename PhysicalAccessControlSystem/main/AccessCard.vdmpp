@@ -1,7 +1,7 @@
 class AccessCard
 	instance variables
 		id: nat;
-		expirationDate: Date;
+		expirationDate: [Date];
 	operations
 		public AccessCard : nat * Date ==> AccessCard
 		AccessCard(uniqueID, date) == 
@@ -11,10 +11,18 @@ class AccessCard
 			return self;
 		);
 		
+		public AccessCard : nat ==> AccessCard
+		AccessCard(uniqueID) ==
+		(
+			id := uniqueID;
+			expirationDate := nil;
+			return self;
+		);
+		
 		public isValid : Date ==> bool
 		isValid(date) ==
 		(
-			return expirationDate.isGreaterOrEqual(date);
+			return not hasExpirationDate() or expirationDate.isGreaterOrEqual(date);
 		);
 		
 		public getID : () ==> nat
@@ -22,8 +30,22 @@ class AccessCard
 			return self.id;
 		);
 		
+		public hasExpirationDate : () ==> bool
+		hasExpirationDate() == 
+			return self.expirationDate <> nil;
+		
 		public getExpirationDate : () ==> Date
-		getExpirationDate() == (
-			return self.expirationDate;
-		);
+		getExpirationDate() == 
+			return self.expirationDate
+		pre expirationDate <> nil;
+		
+		public setExpirationDate : Date ==> ()
+		setExpirationDate(newDate) == 
+			expirationDate := newDate;
+		
+		public removeExpirationDate : () ==> ()
+		removeExpirationDate() == 
+			expirationDate := nil
+		pre expirationDate = nil;
+		
 end AccessCard
