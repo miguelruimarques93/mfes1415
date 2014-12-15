@@ -7,6 +7,8 @@ types
 	
 instance variables
 	lastId: nat := 0;
+	
+	users: set of User := {};
 
 	accessCards: set of AccessCard := {};
 	
@@ -14,9 +16,10 @@ instance variables
 	
 	userAccessCard: map User to AccessCard := {|->};
 	
-	inv let users = getUsers() in ( forall user in set dom userAccessCard & user in set users );
+	inv let us = getUsers() in ( forall user in set dom userAccessCard & user in set us );
 	inv rng userAccessCard subset accessCards;
 	inv forall ac in set accessCards & forall ac1 in set accessCards \ {ac} & ac1.getID() <> ac.getID();
+	inv dom userAccessCard subset users
 	
 operations
 
@@ -41,10 +44,11 @@ operations
 	createNewUser(name) == (
 		let user = mk_User(name) in (
 			groupUsers := groupUsers munion { name |-> { user } };
+			users := users union {user};
 			return user;
 		);
 	)
-	pre forall user in set dunion rng groupUsers & user.name <> name;
+	pre let u = mk_User(name) in u not in set users;
 	
 	public createNewGroupOfUsers : Utils`String ==> ()
 	createNewGroupOfUsers(name) == (
@@ -57,10 +61,9 @@ operations
 		groupUsers(groupName) := groupUsers(groupName) union { user };
 	)
 	pre groupName in set dom groupUsers 
-	-- and user in set groupUsers(groupName)
-	and user in set dunion rng groupUsers;
+	and user in set users;
 
 	private getUsers : () ==> set of User
-	getUsers() == return dunion rng groupUsers;
+	getUsers() == return users;
 	
 end PhysicalAccessControlSystem
