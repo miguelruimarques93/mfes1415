@@ -45,7 +45,7 @@ operations
 	public isLessOrEqual : Date ==> bool
 	isLessOrEqual(other) == (
 		return self.isLess(other) or self.isEqual(other);
-	);	
+	);
 	
 	public isEqual: Date ==> bool
 	isEqual(other) == (

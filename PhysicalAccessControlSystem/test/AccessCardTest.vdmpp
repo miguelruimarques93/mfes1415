@@ -17,8 +17,8 @@ class AccessCardTest
 		private testGetters : () ==> ()
 		testGetters() == 
 		(
-			Assert`assertTrue(ac.getID() = 0);
-			Assert`assertFalse(ac.getID() = 1);
+			Assert`assertEqual(ac.getID(), 0);
+			Assert`assertDifferent(ac.getID(), 1);
 			Assert`assertTrue(ac.getExpirationDate().isEqual(new Date(31, 12, 2014)));
 		);
 		

@@ -2,6 +2,7 @@ class User
 instance variables
 	accessCard: [AccessCard];
 	name: seq of char;
+	
 operations
 	public User : seq of char ==> User
 	User(n) == 
@@ -9,7 +10,8 @@ operations
 		name := n;
 		accessCard := nil;
 		return self;
-	);
+	)
+	pre len n > 0;
 	
 	public User : seq of char * AccessCard ==> User
 	User(n, ac) ==
@@ -17,29 +19,35 @@ operations
 		name := n;
 		accessCard := ac;
 		return self;
-	);
+	)
+	pre len n > 0;
 	
-	public setAccessCard : AccessCard ==> User
-	setAccessCard(ac) ==
-	(
-		accessCard := ac;
-		return self;
-	);
+	public getName : () ==> seq of char
+	getName() == return self.name;
 	
-	public removeAccessCard : () ==> User
+	public getAccessCard : () ==> AccessCard
+	getAccessCard() == return self.accessCard
+	pre accessCard <> nil;
+	
+	public setAccessCard : AccessCard ==> ()
+	setAccessCard(ac) == accessCard := ac
+	pre accessCard = nil
+	post accessCard = ac;
+	
+	public removeAccessCard : () ==> AccessCard
 	removeAccessCard() ==
 	(
-		accessCard := nil;
-		return self;
-	);
+		let ac = accessCard in ( 
+			accessCard := nil;
+			return ac;
+		);
+	)
+	pre accessCard <> nil
+	post accessCard = nil;
 	
 	public hasAccessCard : () ==> bool
 	hasAccessCard() ==
 	(
 		return accessCard <> nil;
 	);
-	
-	
-functions
-
 end User

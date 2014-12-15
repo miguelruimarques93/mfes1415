@@ -2,13 +2,22 @@ class UserTest
 
 instance variables
 	u : User := new User("User 1");
-
+	ac : AccessCard := new AccessCard(1, new Date(1,1,2014));
+	u2 : User := new User("User 2", ac);
 operations
 
 	private testUser : () ==> ()
 	testUser() ==
 	(
-		()
+		Assert`assertEqual(u.getName(), "User 1");
+		Assert`assertFalse(u.hasAccessCard());
+		
+		u.setAccessCard(ac);
+		Assert`assertTrue(u.hasAccessCard());
+		Assert`assertEqual(u.getAccessCard(), ac);
+		
+		Assert`assertEqual(u.removeAccessCard(), ac);
+		Assert`assertFalse(u.hasAccessCard());
 	);
 	
 	public static main : () ==> ()
