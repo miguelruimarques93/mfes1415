@@ -1,13 +1,16 @@
 class AccessRule
-
+types
+	public Type = <allow> | <block>;
 instance variables
 	groupFacility: Utils`String;
 	groupUser: Utils`String;
+	ruleType: Type;
 operations
-	public AccessRule : Utils`String * Utils`String ==> AccessRule
-	AccessRule(facs, users) == (
+	public AccessRule : Utils`String * Utils`String * Type ==> AccessRule
+	AccessRule(facs, users, type) == (
 		groupFacility := facs;
 		groupUser := users;
+		ruleType := type;
 		return self;
 	);
 	
@@ -16,5 +19,8 @@ operations
 	
 	public getGroupUser : () ==> Utils`String
 	getGroupUser() == return self.groupUser;
+	
+	public getRuleType : () ==> Type
+	getRuleType() == return self.ruleType;
 	
 end AccessRule
