@@ -1,0 +1,21 @@
+class AccessPoint
+
+instance variables
+	id: nat1;
+	facility: PhysicalAccessControlSystem`Facility;
+	 
+operations
+	public AccessPoint : nat1 * PhysicalAccessControlSystem`Facility ==> AccessPoint
+	AccessPoint(uniqueId, fac) == (
+		id := uniqueId;
+		facility := fac;
+		return self;
+	);
+	
+	public getId : () ==> nat1
+	getId() == return self.id;
+	
+	public getFacility : () ==> PhysicalAccessControlSystem`Facility
+	getFacility() == return self.facility;
+
+end AccessPoint

@@ -3,16 +3,24 @@ types
 	public User :: name: Utils`String
 	inv mk_User(n) == len n > 0;
 	
+	public Facility :: name: Utils`String
+	inv mk_Facility(n) == len n > 0;
+	
 	GroupUser = set of User;
+	GroupFacility = set of Facility;
 	
 instance variables
-	lastId: nat := 0;
+	lastAccessCardId: nat := 0;
+	lastAccessPointId: nat := 0;
 	
 	users: set of User := {};
-
-	accessCards: set of AccessCard := {};
-	
 	groupUsers: map Utils`String to GroupUser := {|->};
+	
+	facilities: set of Facility := {};
+	groupFacilities: map Utils`String to GroupFacility := {|->};
+	
+	accessCards: set of AccessCard := {};
+	accessPolicies: map AccessPoint to set of AccessRule := {|->};
 	
 	userAccessCard: map User to AccessCard := {|->};
 	
@@ -25,8 +33,8 @@ operations
 
 	public createNewAccessCard: () ==> AccessCard
 	createNewAccessCard() == (
-		lastId := lastId + 1;
-		let ac: AccessCard = new AccessCard(lastId) in (
+		lastAccessCardId := lastAccessCardId + 1;
+		let ac: AccessCard = new AccessCard(lastAccessCardId) in (
 			accessCards := accessCards union {ac};
 			return ac;
 		);
@@ -63,7 +71,32 @@ operations
 	pre groupName in set dom groupUsers 
 	and user in set users;
 
-	private getUsers : () ==> set of User
-	getUsers() == return users;
+	public createNewFacility: Utils`String ==> Facility
+	createNewFacility(name) == (
+		let fac = mk_Facility(name) in (
+			groupFacilities := groupFacilities munion { name |-> { fac } };
+			facilities := facilities union { fac };
+			return fac
+		);
+	)
+	pre let f = mk_Facility(name) in f not in set facilities;
 	
+	public createNewAccessPoint: Facility ==> AccessPoint
+	createNewAccessPoint(fac) == (
+		lastAccessPointId := lastAccessPointId + 1;
+		let ap: AccessPoint = new AccessPoint(lastAccessPointId, fac) in (
+			accessPolicies := accessPolicies munion { ap |-> { } };
+			return ap;
+		);
+	)
+	pre fac in set facilities;
+	
+	public addAccessRuleToAccessPolicy: AccessPoint * AccessRule ==> ()
+	addAccessRuleToAccessPolicy(ap, ar) == (
+		accessPolicies(ap) := accessPolicies(ap) union { ar } 
+	);
+
+
+	private getUsers : () ==> set of User
+	getUsers() == return users;	
 end PhysicalAccessControlSystem
