@@ -20,14 +20,13 @@ instance variables
 	groupFacilities: map Utils`String to GroupFacility := {|->};
 	
 	accessCards: set of AccessCard := {};
-	accessPolicies: map AccessPoint to set of AccessRule := {|->};
+	accessPolicies: map AccessPoint to seq of AccessRule := {|->};
 	
-	userAccessCard: map User to AccessCard := {|->};
+	accessCardUser: map AccessCard to User := {|->};
 	
-	inv let us = getUsers() in ( forall user in set dom userAccessCard & user in set us );
-	inv rng userAccessCard subset accessCards;
+	inv dom accessCardUser subset accessCards;
 	inv forall ac in set accessCards & forall ac1 in set accessCards \ {ac} & ac1.getID() <> ac.getID();
-	inv dom userAccessCard subset users
+	inv rng accessCardUser subset users
 	
 operations
 
@@ -58,6 +57,25 @@ operations
 	)
 	pre let u = mk_User(name) in u not in set users;
 	
+	public associateAccessCardToUser: AccessCard * User ==> ()
+	associateAccessCardToUser(ac, user) == (
+		accessCardUser := accessCardUser munion { ac |-> user };
+	) pre user not in set rng accessCardUser and 
+				ac not in set dom accessCardUser;
+	
+	public removeUserAccessCard: User ==> ()
+	removeUserAccessCard(user) == (
+		accessCardUser := accessCardUser :-> { user };
+	) pre user in set rng accessCardUser;
+	
+	public transferUserAccessCard: User * User ==> ()
+	transferUserAccessCard(source, destination) == (
+		let ac: AccessCard = (inverse accessCardUser)(source) in (
+			removeUserAccessCard(source);
+			associateAccessCardToUser(ac, destination);
+		);	
+	);
+	
 	public createNewGroupOfUsers : Utils`String ==> ()
 	createNewGroupOfUsers(name) == (
 		groupUsers := groupUsers munion { name |-> { } };
@@ -85,18 +103,34 @@ operations
 	createNewAccessPoint(fac) == (
 		lastAccessPointId := lastAccessPointId + 1;
 		let ap: AccessPoint = new AccessPoint(lastAccessPointId, fac) in (
-			accessPolicies := accessPolicies munion { ap |-> { } };
+			accessPolicies := accessPolicies munion { ap |-> [ ] };
 			return ap;
 		);
 	)
 	pre fac in set facilities;
 	
-	public addAccessRuleToAccessPolicy: AccessPoint * AccessRule ==> ()
-	addAccessRuleToAccessPolicy(ap, ar) == (
-		accessPolicies(ap) := accessPolicies(ap) union { ar } 
+	public addAccessRuleToAccessPoint: AccessPoint * AccessRule ==> ()
+	addAccessRuleToAccessPoint(ap, ar) == (
+		accessPolicies(ap) := accessPolicies(ap) ^ [ ar ] 
+	)
+	pre ar.groupUser in set dom groupUsers and ar.groupFacility in set dom groupFacilities; 
+
+	public requestAccess : AccessCard * AccessPoint * Date ==> bool
+	requestAccess(ac, accessPoint, date) == (
+		if not ac.isValid(date) then return false;
+		if not ac in set dom accessCardUser then return false;
+		
+		let user: User = accessCardUser(ac),
+			  rules: seq of AccessRule = accessPolicies(accessPoint),
+			  validIndices: set of nat1 = { i | 
+					i in set inds rules & 
+						rules(i).isValid(date) and
+						user in set groupUsers(rules(i).getGroupUser()) and 
+						accessPoint.getFacility() in set groupFacilities(rules(i).getGroupFacility()) 
+				} in 
+		(
+			return if card validIndices = 0 then false else rules(Utils`max(validIndices)).getRuleType() = <allow>;
+		)
 	);
-
-
-	private getUsers : () ==> set of User
-	getUsers() == return users;	
+		
 end PhysicalAccessControlSystem

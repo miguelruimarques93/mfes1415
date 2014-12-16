@@ -1,16 +1,29 @@
 class AccessRule
 types
-	public Type = <allow> | <block>;
+	public Type = <allow> | <deny>;
+	public TemporalConstraint = Date -> bool;
+	
 instance variables
-	groupFacility: Utils`String;
-	groupUser: Utils`String;
+	public groupFacility: Utils`String;
+	public groupUser: Utils`String;
 	ruleType: Type;
+	temporalConstraint: [TemporalConstraint] := nil;
+	
 operations
 	public AccessRule : Utils`String * Utils`String * Type ==> AccessRule
 	AccessRule(facs, users, type) == (
 		groupFacility := facs;
 		groupUser := users;
 		ruleType := type;
+		return self;
+	);
+	
+	public AccessRule : Utils`String * Utils`String * Type * TemporalConstraint ==> AccessRule
+	AccessRule(facs, users, type, constraint) == (
+		groupFacility := facs;
+		groupUser := users;
+		ruleType := type;
+		temporalConstraint := constraint;
 		return self;
 	);
 	
@@ -23,4 +36,16 @@ operations
 	public getRuleType : () ==> Type
 	getRuleType() == return self.ruleType;
 	
+	public isValid : Date ==> bool
+	isValid(date) == return not hasTemporalConstraint() or temporalConstraint(date);
+	
+	public hasTemporalConstraint: () ==> bool
+	hasTemporalConstraint() == return temporalConstraint <> nil;
+	
+	public setTemporalConstraint : TemporalConstraint ==> ()
+	setTemporalConstraint(tc) == temporalConstraint := tc;
+	
+	public removeTemporalConstraint : () ==> ()
+	removeTemporalConstraint() == temporalConstraint := nil
+	pre temporalConstraint <> nil;
 end AccessRule

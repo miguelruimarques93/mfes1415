@@ -1,4 +1,18 @@
 class Utils
 types
 	public static String = seq of char
+	
+operations
+	
+	public static max : set of nat1 ==> nat1
+	max(s) == (
+		dcl maxElem: nat1 := 1;
+		
+		for all elem in set s do (
+			if maxElem < elem then maxElem := elem;
+		);
+		
+		return maxElem;
+	) pre s <> {};
+	
 end Utils
