@@ -10,6 +10,9 @@ types
 	GroupFacility = set of Facility;
 	
 instance variables
+	logFilename: Utils`String;
+	io: IO := new IO();
+
 	lastAccessCardId: nat := 0;
 	lastAccessPointId: nat := 0;
 	
@@ -29,6 +32,16 @@ instance variables
 	inv rng accessCardUser subset users
 	
 operations
+
+	public PhysicalAccessControlSystem: Utils`String ==> PhysicalAccessControlSystem
+	PhysicalAccessControlSystem(filename) == (
+		logFilename := filename;
+		log("\n-- NEW LOG --");
+		return self;
+	);
+	
+	private log : Utils`String ==> ()
+	log(val) == if not io.fecho(logFilename, val ^ "\n" , <append>) then IO`println("Error writing message to log file: " ^ val);
 
 	public createNewAccessCard: () ==> AccessCard
 	createNewAccessCard() == (
@@ -115,10 +128,10 @@ operations
 	)
 	pre ar.groupUser in set dom groupUsers and ar.groupFacility in set dom groupFacilities; 
 
-	public requestAccess : AccessCard * AccessPoint * Date ==> bool
-	requestAccess(ac, accessPoint, date) == (
-		if not ac.isValid(date) then return false;
-		if not ac in set dom accessCardUser then return false;
+	private requestAccessImpl : AccessCard * AccessPoint * Date ==> (bool * Utils`String * Utils`String)
+	requestAccessImpl(ac, accessPoint, date) == (
+		if not ac in set dom accessCardUser then return mk_(false, "Uknown user", "access card is not associated with a user");
+		if not ac.isValid(date) then return mk_(false, accessCardUser(ac).name, "access card expired");
 		
 		let user: User = accessCardUser(ac),
 			  rules: seq of AccessRule = accessPolicies(accessPoint),
@@ -129,8 +142,21 @@ operations
 						accessPoint.getFacility() in set groupFacilities(rules(i).getGroupFacility()) 
 				} in 
 		(
-			return if card validIndices = 0 then false else rules(Utils`max(validIndices)).getRuleType() = <allow>;
+			if card validIndices = 0 or rules(Utils`max(validIndices)).getRuleType() = <deny>
+			then return mk_(false, user.name, "user is not authorized")
+			else return mk_(true, user.name, "")
 		)
+	);
+	
+	public requestAccess : AccessCard * AccessPoint * Date ==> bool
+	requestAccess(ac, accessPoint, date) == (
+		let result = requestAccessImpl(ac, accessPoint, date) in (
+			if result.#1
+			then log("Access granted to " ^ accessPoint.getFacility().name ^ " for " ^ result.#2 ^ ".") -- TODO add datetime
+			else log("Access denied to " ^ accessPoint.getFacility().name ^ " for " ^ result.#2 ^ ": " ^ result.#3 ^ ".");  -- TODO add datetime
+			
+			return result.#1;
+		);
 	);
 		
 end PhysicalAccessControlSystem

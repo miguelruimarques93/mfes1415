@@ -6,7 +6,7 @@ operations
 		public static main: () ==> ()
 		main() ==
 		(
-			let pacs: PhysicalAccessControlSystem = new PhysicalAccessControlSystem() in (
+			let pacs: PhysicalAccessControlSystem = new PhysicalAccessControlSystem("Test.log") in (
 				IO`println(pacs);
 				let user: PhysicalAccessControlSystem`User = pacs.createNewUser("Miguel"),
 					  user1: PhysicalAccessControlSystem`User = pacs.createNewUser("Cleto") in ( 
