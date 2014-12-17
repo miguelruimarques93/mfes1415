@@ -2,7 +2,7 @@ class AccessPoint
 
 instance variables
 	id: nat1;
-	facility: PhysicalAccessControlSystem`Facility;
+	public facility: PhysicalAccessControlSystem`Facility;
 	 
 operations
 	public AccessPoint : nat1 * PhysicalAccessControlSystem`Facility ==> AccessPoint

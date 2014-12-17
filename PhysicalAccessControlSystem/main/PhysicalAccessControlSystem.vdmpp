@@ -60,6 +60,15 @@ operations
 		);
 	);
 	
+	public removeAccessCard: AccessCard ==> ()
+	removeAccessCard(ac) == (
+		accessCards := accessCards \ { ac };
+		accessCardUser := { ac } <-: accessCardUser;
+	)
+	pre ac in set accessCards
+	post not ac in set accessCards and
+			 not ac in set dom accessCardUser;
+	
 	public createNewUser : Utils`String ==> User
 	createNewUser(name) == (
 		let user = mk_User(name) in (
@@ -69,6 +78,20 @@ operations
 		);
 	)
 	pre let u = mk_User(name) in u not in set users;
+	
+	public removeUser: User ==> ()
+	removeUser(user) == (
+		users := users \ { user };
+		for all groupName in set dom groupUsers do (
+			groupUsers(groupName) := groupUsers(groupName) \ { user }; 
+		);
+		groupUsers := groupUsers :-> { };
+		accessCardUser := accessCardUser :-> { user };
+	)
+	pre user in set users
+	post not user in set users and
+			 not user in set rng accessCardUser and
+			 not user in set dunion rng groupUsers;
 	
 	public associateAccessCardToUser: AccessCard * User ==> ()
 	associateAccessCardToUser(ac, user) == (
@@ -95,6 +118,13 @@ operations
 	)
 	pre not name in set dom groupUsers;
 	
+	public removeGroupOfUsers : Utils`String ==> ()
+	removeGroupOfUsers(name) == (
+		groupUsers := { name } <-: groupUsers;
+	)
+	pre name in set dom groupUsers
+	post not name in set dom groupUsers;
+	
 	public addUserToGroupOfUsers : Utils`String * User ==> ()
 	addUserToGroupOfUsers(groupName, user) == (
 		groupUsers(groupName) := groupUsers(groupName) union { user };
@@ -111,6 +141,40 @@ operations
 		);
 	)
 	pre let f = mk_Facility(name) in f not in set facilities;
+	
+	public removeFacility: Facility ==> ()
+	removeFacility(fac) == (
+		facilities := facilities \ { fac };
+		for all groupName in set dom groupFacilities do (
+			groupFacilities(groupName) := groupFacilities(groupName) \ { fac }; 
+		);
+		groupFacilities := groupFacilities :-> { };
+		accessPolicies := { ap | ap in set dom accessPolicies & ap.facility <> fac } <-: accessPolicies;
+	)
+	pre fac in set facilities
+	post not fac in set facilities and
+			 not fac in set { ap.facility | ap in set dom accessPolicies } and
+			 not fac in set dunion rng groupFacilities;
+	
+	public createNewGroupOfFacilities : Utils`String ==> ()
+	createNewGroupOfFacilities(name) == (
+		groupFacilities := groupFacilities munion { name |-> { } };
+	)
+	pre not name in set dom groupFacilities;
+	
+	public removeGroupOfFacilities : Utils`String ==> ()
+	removeGroupOfFacilities(name) == (
+		groupFacilities := { name } <-: groupFacilities;
+	)
+	pre name in set dom groupUsers
+	post not name in set dom groupUsers;
+	
+	public addFacilityToGroupOfFacilities : Utils`String * Facility ==> ()
+	addFacilityToGroupOfFacilities(groupName, fac) == (
+		groupFacilities(groupName) := groupFacilities(groupName) union { fac };
+	)
+	pre groupName in set dom groupFacilities and 
+			fac in set facilities;
 	
 	public createNewAccessPoint: Facility ==> AccessPoint
 	createNewAccessPoint(fac) == (
