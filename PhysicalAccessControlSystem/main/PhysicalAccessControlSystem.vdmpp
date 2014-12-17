@@ -131,6 +131,15 @@ operations
 	)
 	pre groupName in set dom groupUsers 
 	and user in set users;
+	
+	public removeUserFromGroupOfUsers : Utils`String * User ==> ()
+	removeUserFromGroupOfUsers(groupName, user) == (
+		groupUsers(groupName) := groupUsers(groupName) \ { user };
+		groupUsers := groupUsers :-> { };
+	)
+	pre groupName in set dom groupUsers and
+			user in set groupUsers(groupName)
+	post groupName in set dom groupUsers => not user in set groupUsers(groupName);
 
 	public createNewFacility: Utils`String ==> Facility
 	createNewFacility(name) == (
@@ -175,6 +184,16 @@ operations
 	)
 	pre groupName in set dom groupFacilities and 
 			fac in set facilities;
+			
+	public removeFacilityFromGroup : Utils`String * Facility ==> ()
+	removeFacilityFromGroup(groupName, fac) == (
+		groupFacilities(groupName) := groupFacilities(groupName) \ { fac };
+		groupFacilities := groupFacilities :-> { }
+	)
+	pre groupName in set dom groupFacilities and 
+			fac in set facilities and
+			fac in set groupFacilities(groupName)
+	post groupName in set dom groupFacilities => not fac in set groupFacilities(groupName);
 	
 	public createNewAccessPoint: Facility ==> AccessPoint
 	createNewAccessPoint(fac) == (
@@ -185,6 +204,13 @@ operations
 		);
 	)
 	pre fac in set facilities;
+	
+	public removeAccessPoint: AccessPoint ==> ()
+	removeAccessPoint(ap) == (
+		accessPolicies := { ap } <-: accessPolicies;
+	)
+	pre ap in set dom accessPolicies
+	post not ap in set dom accessPolicies;
 	
 	public addAccessRuleToAccessPoint: AccessPoint * AccessRule ==> ()
 	addAccessRuleToAccessPoint(ap, ar) == (
