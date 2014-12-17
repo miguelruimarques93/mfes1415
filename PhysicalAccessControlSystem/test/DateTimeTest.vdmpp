@@ -1,20 +1,20 @@
-class DateTest
+class DateTimeTest
 	instance variables
-		d: Date := new Date(30, 1, 2010)
+		d: DateTime := new DateTime(30, 1, 2010)
 
 	operations
 
 		private testLeapYear: () ==> ()
 		testLeapYear() ==
 		(
-			Assert`assertTrue(Date`isLeapYear(2000));
-			Assert`assertTrue(Date`isLeapYear(2004));
-			Assert`assertFalse(Date`isLeapYear(2100));
-			Assert`assertFalse(Date`isLeapYear(2001));
+			Assert`assertTrue(DateTime`isLeapYear(2000));
+			Assert`assertTrue(DateTime`isLeapYear(2004));
+			Assert`assertFalse(DateTime`isLeapYear(2100));
+			Assert`assertFalse(DateTime`isLeapYear(2001));
 			
-			IO`println(new Date(29, 2, 2000));
-			IO`println(new Date(28, 2, 2001));
-			IO`println(new Date(30, 4, 2001));
+			IO`println(new DateTime(29, 2, 2000));
+			IO`println(new DateTime(28, 2, 2001));
+			IO`println(new DateTime(30, 4, 2001));
 		);
 		
 		private testGetters : () ==> ()
@@ -28,8 +28,8 @@ class DateTest
 		private testComparators : () ==> ()
 		testComparators() ==
 		(
-			let d1 : Date = new Date(1, 1, 2000), 
-				  d2 : Date = new Date(1, 1, 2010) in (
+			let d1 : DateTime = new DateTime(1, 1, 2000), 
+				  d2 : DateTime = new DateTime(1, 1, 2010) in (
 				Assert`assertTrue(d1.isLessOrEqual(d2));
 				Assert`assertTrue(d1.isLessOrEqual(d1));
 				Assert`assertTrue(d2.isGreater(d1));
@@ -39,11 +39,11 @@ class DateTest
 		public static main: () ==> ()
     main() ==
     (
-    	let dt : DateTest = new DateTest() in (
+    	let dt : DateTimeTest = new DateTimeTest() in (
       	dt.testLeapYear();
       	dt.testGetters();
       	dt.testComparators();
       );
     );
 
-end DateTest
+end DateTimeTest

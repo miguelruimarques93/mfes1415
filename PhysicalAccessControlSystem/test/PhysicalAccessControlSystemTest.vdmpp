@@ -16,7 +16,7 @@ operations
 						IO`println(pacs);
 						IO`println(feup);	
 						let ac: AccessCard = pacs.createNewAccessCard(),
-								ac1: AccessCard = pacs.createNewTemporaryAccessCard(new Date(15, 12, 2014))
+								ac1: AccessCard = pacs.createNewTemporaryAccessCard(new DateTime(15, 12, 2014))
 						 in (
 							IO`println(pacs);
 							IO`println(ac);	
@@ -31,17 +31,17 @@ operations
 								pacs.addAccessRuleToAccessPoint(ap, new AccessRule("FEUP", "Miguel", <deny>));
 								IO`println(pacs);
 			
-								Assert`assertFalse(pacs.requestAccess(ac, ap, new Date(16, 12, 2014)));
+								Assert`assertFalse(pacs.requestAccess(ac, ap, new DateTime(16, 12, 2014)));
 								
 								pacs.addAccessRuleToAccessPoint(ap, new AccessRule("FEUP", "Miguel", <allow>));
 								
-								Assert`assertTrue(pacs.requestAccess(ac, ap, new Date(16, 12, 2014)));
+								Assert`assertTrue(pacs.requestAccess(ac, ap, new DateTime(16, 12, 2014)));
 								
 								pacs.removeUserAccessCard(user);
 								pacs.transferUserAccessCard(user1, user);
 								
-								Assert`assertFalse(pacs.requestAccess(ac1, ap, new Date(16, 12, 2014)));
-								Assert`assertTrue(pacs.requestAccess(ac1, ap, new Date(14, 12, 2014)));
+								Assert`assertFalse(pacs.requestAccess(ac1, ap, new DateTime(16, 12, 2014)));
+								Assert`assertTrue(pacs.requestAccess(ac1, ap, new DateTime(14, 12, 2014)));
 			)))));
 		);
 

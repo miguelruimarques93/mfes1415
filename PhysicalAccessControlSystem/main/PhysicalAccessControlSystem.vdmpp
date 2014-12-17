@@ -52,7 +52,7 @@ operations
 		);
 	);
 	
-	public createNewTemporaryAccessCard: Date ==> AccessCard
+	public createNewTemporaryAccessCard: DateTime ==> AccessCard
 	createNewTemporaryAccessCard(expDate) == (
 		let newCard: AccessCard = createNewAccessCard() in (
 			newCard.setExpirationDate(expDate);
@@ -218,7 +218,7 @@ operations
 	)
 	pre ar.groupUser in set dom groupUsers and ar.groupFacility in set dom groupFacilities; 
 
-	private requestAccessImpl : AccessCard * AccessPoint * Date ==> (bool * Utils`String * Utils`String)
+	private requestAccessImpl : AccessCard * AccessPoint * DateTime ==> (bool * Utils`String * Utils`String)
 	requestAccessImpl(ac, accessPoint, date) == (
 		if not ac in set dom accessCardUser then return mk_(false, "Uknown user", "access card is not associated with a user");
 		if not ac.isValid(date) then return mk_(false, accessCardUser(ac).name, "access card expired");
@@ -238,12 +238,12 @@ operations
 		)
 	);
 	
-	public requestAccess : AccessCard * AccessPoint * Date ==> bool
+	public requestAccess : AccessCard * AccessPoint * DateTime ==> bool
 	requestAccess(ac, accessPoint, date) == (
 		let result = requestAccessImpl(ac, accessPoint, date) in (
 			if result.#1
-			then log("Access granted to " ^ accessPoint.getFacility().name ^ " for " ^ result.#2 ^ ".") -- TODO add datetime
-			else log("Access denied to " ^ accessPoint.getFacility().name ^ " for " ^ result.#2 ^ ": " ^ result.#3 ^ ".");  -- TODO add datetime
+			then log(date.toString() ^ ": Access granted to " ^ accessPoint.getFacility().name ^ " for " ^ result.#2 ^ ".") -- TODO add datetime
+			else log(date.toString() ^ ": Access denied to " ^ accessPoint.getFacility().name ^ " for " ^ result.#2 ^ ": " ^ result.#3 ^ ".");  -- TODO add datetime
 			
 			return result.#1;
 		);

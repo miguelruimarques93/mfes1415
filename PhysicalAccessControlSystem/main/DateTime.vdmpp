@@ -1,0 +1,118 @@
+class DateTime
+
+instance variables
+	day: nat1;
+	month: nat1;
+	year: nat;
+	hour: nat;
+	minute: nat;
+	second: nat;
+	
+operations
+	public DateTime : nat1 * nat1 * nat ==> DateTime
+	DateTime(d, m, y) == 
+	(
+		day := d;
+		month := m;
+		year := y;
+		hour := 0;
+		minute := 0;
+		second := 0;
+		return self;
+	)
+	pre d <= 31 and
+	m <= 12 and
+	if m in set {4, 6, 9, 11}
+	then d <= 30
+	else (m = 2) => if isLeapYear(y) then (d <= 29) else (d <= 28);
+	
+	public DateTime : nat1 * nat1 * nat * nat * nat * nat ==> DateTime
+	DateTime(d, m, y, h, min, s) == 
+	(
+		day := d;
+		month := m;
+		year := y;
+		hour := h;
+		minute := min;
+		second := s;
+		return self;
+	)
+	pre d <= 31 and
+	m <= 12 and
+	if m in set {4, 6, 9, 11}
+	then d <= 30
+	else (m = 2) => if isLeapYear(y) then (d <= 29) else (d <= 28) and
+	h < 24 and min < 60 and s < 60;
+	
+	public getDay : () ==> nat1
+	getDay() == (
+		return self.day;
+	);
+	
+	public getMonth : () ==> nat1
+	getMonth() == (
+		return self.month;
+	);
+	
+	public getYear : () ==> nat
+	getYear() == (
+		return self.year;
+	);
+	
+	public isLess : DateTime ==> bool
+	isLess(other) == (
+		return (self.year < other.year) or
+					 (self.year = other.year and self.month < other.month) or
+					 (self.year = other.year and self.month = other.month and self.day < other.day) or
+					 (self.year = other.year and self.month = other.month and self.day = other.day and self.hour < other.hour) or
+					 (self.year = other.year and self.month = other.month and self.day = other.day and self.hour = other.hour and self.minute < other.minute) or
+					 (self.year = other.year and self.month = other.month and self.day = other.day and self.hour = other.hour and self.minute = other.minute and other.second < other.second)
+					 ;
+	);
+	
+	public isLessOrEqual : DateTime ==> bool
+	isLessOrEqual(other) == (
+		return self.isLess(other) or self.isEqual(other);
+	);
+	
+	public isEqual: DateTime ==> bool
+	isEqual(other) == (
+		return self.year = other.year and 
+					 self.month = other.month and 
+					 self.day = other.day and
+					 self.hour = other.hour and
+					 self.minute = other.minute and
+					 self.second = other.second;
+	);
+	
+	public isDifferent: DateTime ==> bool
+	isDifferent(other) == (
+		return not self.isEqual(other);
+	);
+	
+	public isGreater : DateTime ==> bool
+	isGreater(other) == (
+		return self.isGreaterOrEqual(other) and self.isDifferent(other);
+	);
+	
+	public isGreaterOrEqual : DateTime ==> bool
+	isGreaterOrEqual(other) == (
+		return not self.isLess(other);
+	);
+	
+	public toString : () ==> Utils`String
+	toString() == (
+		return VDMUtil`val2seq_of_char[nat1](day) ^ "-" ^ 
+					 VDMUtil`val2seq_of_char[nat1](month) ^ "-" ^ 
+					 VDMUtil`val2seq_of_char[nat](year) ^ " " ^ 
+					 VDMUtil`val2seq_of_char[nat](hour) ^ ":" ^ 
+					 VDMUtil`val2seq_of_char[nat](minute) ^ ":" ^ 
+					 VDMUtil`val2seq_of_char[nat](second);
+	);
+	
+functions
+	public static isLeapYear : nat -> bool
+	isLeapYear(y) == (
+		if y mod 100 = 0 then y mod 400 = 0 else y mod 4 = 0
+	);	
+end DateTime

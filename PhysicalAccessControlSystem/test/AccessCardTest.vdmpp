@@ -1,24 +1,24 @@
 class AccessCardTest
 	instance variables
-		ac: AccessCard := new AccessCard(0, new Date(31, 12, 2014));
+		ac: AccessCard := new AccessCard(0, new DateTime(31, 12, 2014));
 	operations
 		
 		private testValidCard: () ==> ()
 		testValidCard() ==
 		(
 			
-			Assert`assertTrue(ac.isValid(new Date(31, 12, 2014)));
-			Assert`assertFalse(ac.isValid(new Date(1, 1, 2015)));
-			Assert`assertTrue(ac.isValid(new Date(30, 12, 2014)));
-			Assert`assertTrue(ac.isValid(new Date(31, 10, 2014)));
-			Assert`assertTrue(ac.isValid(new Date(31, 12, 2013)));
+			Assert`assertTrue(ac.isValid(new DateTime(31, 12, 2014)));
+			Assert`assertFalse(ac.isValid(new DateTime(1, 1, 2015)));
+			Assert`assertTrue(ac.isValid(new DateTime(30, 12, 2014)));
+			Assert`assertTrue(ac.isValid(new DateTime(31, 10, 2014)));
+			Assert`assertTrue(ac.isValid(new DateTime(31, 12, 2013)));
 		);
 		
 		private testGetters : () ==> ()
 		testGetters() == 
 		(
 			Assert`assertEqual(ac.getID(), 0);
-			Assert`assertTrue(ac.getExpirationDate().isEqual(new Date(31, 12, 2014)));
+			Assert`assertTrue(ac.getExpirationDate().isEqual(new DateTime(31, 12, 2014)));
 		);
 		
 		public static main: () ==> ()

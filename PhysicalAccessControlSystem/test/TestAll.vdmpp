@@ -5,9 +5,9 @@ class TestAll
     (
     	IO`println(" ");
     	IO`println("**");
-    	IO`println("** DateTest");
+    	IO`println("** DateTimeTest");
     	IO`println("**");
-    	DateTest`main();
+    	DateTimeTest`main();
     	
     	IO`println(" ");
     	IO`println("**");

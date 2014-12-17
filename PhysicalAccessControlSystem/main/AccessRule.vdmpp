@@ -1,7 +1,7 @@
 class AccessRule
 types
 	public Type = <allow> | <deny>;
-	public TemporalConstraint = Date -> bool;
+	public TemporalConstraint = DateTime -> bool;
 	
 instance variables
 	public groupFacility: Utils`String;
@@ -36,7 +36,7 @@ operations
 	public getRuleType : () ==> Type
 	getRuleType() == return self.ruleType;
 	
-	public isValid : Date ==> bool
+	public isValid : DateTime ==> bool
 	isValid(date) == return not hasTemporalConstraint() or temporalConstraint(date);
 	
 	public hasTemporalConstraint: () ==> bool
