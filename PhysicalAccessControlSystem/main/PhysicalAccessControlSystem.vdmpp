@@ -38,8 +38,8 @@ instance variables
 	
 	accessCardUser: map AccessCard to User := {|->};
 	
-	inv dom accessCardUser subset accessCards;
 	inv forall ac in set accessCards & forall ac1 in set accessCards \ {ac} & ac1.getID() <> ac.getID();
+	inv dom accessCardUser subset accessCards;
 	inv rng accessCardUser subset users
 	
 operations
@@ -110,7 +110,9 @@ operations
 	public associateAccessCardToUser: AccessCard * User ==> ()
 	associateAccessCardToUser(ac, user) == (
 		accessCardUser := accessCardUser munion { ac |-> user };
-	) pre user not in set rng accessCardUser and 
+	) pre ac in set accessCards and
+				user in set users and
+				user not in set rng accessCardUser and 
 				ac not in set dom accessCardUser;
 	
 	public removeUserAccessCard: User ==> ()
