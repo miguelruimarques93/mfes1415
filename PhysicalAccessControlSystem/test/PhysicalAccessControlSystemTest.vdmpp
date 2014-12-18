@@ -6,6 +6,7 @@ operations
 		public static main: () ==> ()
 		main() ==
 		(
+			
 			let pacs: PhysicalAccessControlSystem = new PhysicalAccessControlSystem("Test.log") in (
 				IO`println(pacs);
 				let user: PhysicalAccessControlSystem`User = pacs.createNewUser("Miguel"),
@@ -100,6 +101,20 @@ operations
 									);
 								);
 								
+			)))));
+			
+			let pacs2: PhysicalAccessControlSystem = new PhysicalAccessControlSystem("////////////") in (
+				let u: PhysicalAccessControlSystem`User = pacs2.createNewUser("Miguel") in (
+					let bb: PhysicalAccessControlSystem`Facility = pacs2.createNewFacility("Building B") in (
+						let acc: AccessCard = pacs2.createNewAccessCard() in (
+
+							let app: AccessPoint = pacs2.createNewAccessPoint(bb) in (
+			
+								pacs2.associateAccessCardToUser(acc, u);
+								
+								pacs2.addAccessRuleToAccessPoint(app, new AccessRule("Building B", "Miguel", <deny>));
+			
+								Assert`assertFalse(pacs2.requestAccess(acc, app, new DateTime(16, 12, 2014)));
 			)))));
 		);
 
