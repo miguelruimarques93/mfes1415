@@ -15,6 +15,7 @@ class DateTimeTest
 			IO`println(new DateTime(29, 2, 2000));
 			IO`println(new DateTime(28, 2, 2001));
 			IO`println(new DateTime(30, 6, 2001));
+			IO`println(new DateTime(30, 6, 2001, 11, 30, 24));
 		);
 		
 		private testGetters : () ==> ()
