@@ -17,6 +17,12 @@ class TestAll
     	
     	IO`println(" ");
     	IO`println("**");
+    	IO`println("** AccessRuleTest");
+    	IO`println("**");
+    	AccessRuleTest`main();
+    	
+    	IO`println(" ");
+    	IO`println("**");
     	IO`println("** PhysicalAccessControlSystemTest");
     	IO`println("**");
     	PhysicalAccessControlSystemTest`main();

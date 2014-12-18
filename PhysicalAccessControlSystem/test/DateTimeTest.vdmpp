@@ -1,6 +1,6 @@
 class DateTimeTest
 	instance variables
-		d: DateTime := new DateTime(30, 1, 2010)
+		d: DateTime := new DateTime(30, 1, 2010, 10, 25, 5)
 
 	operations
 
@@ -14,15 +14,19 @@ class DateTimeTest
 			
 			IO`println(new DateTime(29, 2, 2000));
 			IO`println(new DateTime(28, 2, 2001));
-			IO`println(new DateTime(30, 4, 2001));
+			IO`println(new DateTime(30, 6, 2001));
 		);
 		
 		private testGetters : () ==> ()
 		testGetters() == 
 		(
-			Assert`assertTrue(d.getDay() = 30);
-			Assert`assertTrue(d.getMonth() = 1);
-			Assert`assertTrue(d.getYear() = 2010);
+			Assert`assertEqual(d.getDay(), 30);
+			Assert`assertEqual(d.getMonth(), 1);
+			Assert`assertEqual(d.getYear(), 2010);
+			Assert`assertEqual(d.getHour(), 10);
+			Assert`assertEqual(d.getMinute(), 25);
+			Assert`assertEqual(d.getSecond(), 5);
+			
 		);
 		
 		private testComparators : () ==> ()

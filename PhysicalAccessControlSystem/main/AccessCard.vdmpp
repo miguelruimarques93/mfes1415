@@ -1,4 +1,8 @@
+
 class AccessCard
+/*
+	Defines an access card
+*/
 	instance variables
 		id: nat;
 		expirationDate: [DateTime];
@@ -46,6 +50,6 @@ class AccessCard
 		public removeExpirationDate : () ==> ()
 		removeExpirationDate() == 
 			expirationDate := nil
-		pre expirationDate = nil;
+		pre expirationDate <> nil;
 		
 end AccessCard

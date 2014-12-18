@@ -48,4 +48,49 @@ operations
 	public removeTemporalConstraint : () ==> ()
 	removeTemporalConstraint() == temporalConstraint := nil
 	pre temporalConstraint <> nil;
+	
+functions
+	public static makeBetweenTemporalConstraint : DateTime * DateTime -> TemporalConstraint
+	makeBetweenTemporalConstraint(first, last) ==
+		lambda d: DateTime & d.isGreaterOrEqual(first) and d.isLessOrEqual(last);
+	
+	public static makeAfterTemporalConstraint : DateTime -> TemporalConstraint
+	makeAfterTemporalConstraint(first) ==
+		lambda d: DateTime & d.isGreaterOrEqual(first);
+		
+	public static makeBeforeTemporalConstraint : DateTime -> TemporalConstraint
+	makeBeforeTemporalConstraint(last) ==
+		lambda d: DateTime & d.isLessOrEqual(last);
+		
+	public static makeTimeBetweenTemporalConstraint : nat * nat * nat * nat * nat * nat -> TemporalConstraint
+	makeTimeBetweenTemporalConstraint(hourStart, minuteStart, secondStart, hourEnd, minuteEnd, secondEnd) ==
+		lambda d: DateTime & 
+			d.isGreaterOrEqual(new DateTime(d.getDay(), d.getMonth(), d.getYear(), hourStart, minuteStart, secondStart)) and
+			d.isLessOrEqual(new DateTime(d.getDay(), d.getMonth(), d.getYear(), hourEnd, minuteEnd, secondEnd));
+			
+	public static makeTimeAfterTemporalConstraint : nat * nat * nat -> TemporalConstraint
+	makeTimeAfterTemporalConstraint(hourStart, minuteStart, secondStart) ==
+		lambda d: DateTime & 
+			d.isGreaterOrEqual(new DateTime(d.getDay(), d.getMonth(), d.getYear(), hourStart, minuteStart, secondStart));
+			
+	public static makeTimeBeforeTemporalConstraint : nat * nat * nat -> TemporalConstraint
+	makeTimeBeforeTemporalConstraint(hourEnd, minuteEnd, secondEnd) ==
+		lambda d: DateTime & 
+			d.isLessOrEqual(new DateTime(d.getDay(), d.getMonth(), d.getYear(), hourEnd, minuteEnd, secondEnd));
+			
+	public static makeMinuteBetweenTemporalConstraint : nat * nat * nat * nat -> TemporalConstraint
+	makeMinuteBetweenTemporalConstraint(minuteStart, secondStart, minuteEnd, secondEnd) ==
+		lambda d: DateTime & 
+			d.isGreaterOrEqual(new DateTime(d.getDay(), d.getMonth(), d.getYear(), d.getHour(), minuteStart, secondStart)) and
+			d.isLessOrEqual(new DateTime(d.getDay(), d.getMonth(), d.getYear(), d.getHour(), minuteEnd, secondEnd));
+			
+	public static makeMinuteAfterTemporalConstraint : nat * nat -> TemporalConstraint
+	makeMinuteAfterTemporalConstraint(minuteStart, secondStart) ==
+		lambda d: DateTime & 
+			d.isGreaterOrEqual(new DateTime(d.getDay(), d.getMonth(), d.getYear(), d.getHour(), minuteStart, secondStart));
+			
+	public static makeMinuteBeforeTemporalConstraint : nat * nat -> TemporalConstraint
+	makeMinuteBeforeTemporalConstraint(minuteEnd, secondEnd) ==
+		lambda d: DateTime & 
+			d.isLessOrEqual(new DateTime(d.getDay(), d.getMonth(), d.getYear(), d.getHour(), minuteEnd, secondEnd));
 end AccessRule

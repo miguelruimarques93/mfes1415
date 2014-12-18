@@ -40,8 +40,22 @@ operations
 								pacs.removeUserAccessCard(user);
 								pacs.transferUserAccessCard(user1, user);
 								
+								Assert`assertFalse(pacs.requestAccess(ac, ap, new DateTime(16, 12, 2014)));
+								
+								pacs.removeAccessCard(ac);
+								pacs.removeUser(user1);
+								
 								Assert`assertFalse(pacs.requestAccess(ac1, ap, new DateTime(16, 12, 2014)));
 								Assert`assertTrue(pacs.requestAccess(ac1, ap, new DateTime(14, 12, 2014)));
+								
+								ac1.removeExpirationDate();
+								
+								Assert`assertTrue(pacs.requestAccess(ac1, ap, new DateTime(16, 12, 2014)));
+								Assert`assertTrue(pacs.requestAccess(ac1, ap, new DateTime(14, 12, 2014)));
+								
+								let ap1: AccessPoint = pacs.createNewAccessPoint(feup) in (
+									Assert`assertTrue(ap1.getId() > ap.getId());
+								);
 			)))));
 		);
 

@@ -1,9 +1,14 @@
 class Utils
+
+/*
+	Containts utility types and functions. 
+*/
 types
 	public static String = seq of char
 	
 operations
 	
+	-- Finds the maximum element in a set of nat1
 	public static max : set of nat1 ==> nat1
 	max(s) == (
 		dcl maxElem: nat1 := 1;
