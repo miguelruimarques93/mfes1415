@@ -1,55 +1,109 @@
-
 class AccessCard
-/*
-	Defines an access card
-*/
-	instance variables
-		id: nat;
-		expirationDate: [DateTime];
-	operations
-		public AccessCard : nat * DateTime ==> AccessCard
-		AccessCard(uniqueID, date) == 
-		(
-			id := uniqueID;
-			expirationDate := date;
-			return self;
-		);
-		
-		public AccessCard : nat ==> AccessCard
-		AccessCard(uniqueID) ==
-		(
-			id := uniqueID;
-			expirationDate := nil;
-			return self;
-		);
-		
-		public isValid : DateTime ==> bool
-		isValid(date) ==
-		(
-			return not hasExpirationDate() or expirationDate.isGreaterOrEqual(date);
-		);
-		
-		public getID : () ==> nat
-		getID() == (
-			return self.id;
-		);
-		
-		public hasExpirationDate : () ==> bool
-		hasExpirationDate() == 
-			return self.expirationDate <> nil;
-		
-		public getExpirationDate : () ==> DateTime
-		getExpirationDate() == 
-			return self.expirationDate
-		pre expirationDate <> nil;
-		
-		public setExpirationDate : DateTime ==> ()
-		setExpirationDate(newDate) == 
-			expirationDate := newDate;
-		
-		public removeExpirationDate : () ==> ()
-		removeExpirationDate() == 
-			expirationDate := nil
-		pre expirationDate <> nil;
+
+-------------------------------------
+--            AccessCard           --
+-------------------------------------
+--           Description           --
+-- - - - - - - - - - - - - - - - - --
+--   Class that defines an access  --
+-- card.                           --
+-------------------------------------
+
+instance variables
+
+	/* Unique AccessCard ID */
+	id: nat;
+	
+	/* AccessCard expiration date of type DateTime */
+	expirationDate: [DateTime];
+	
+operations
+
+	/*
+	 * AccessCard constructor.
+	 *
+	 * @param uniqueID - the card unique identification
+	 * @param date - the card expiration date
+	 *
+	 * @return AccessCard with the id and expirationDate set to the param values
+	 */
+	public AccessCard : nat * DateTime ==> AccessCard
+	AccessCard(uniqueID, date) == 
+	(
+		id := uniqueID;
+		expirationDate := date;
+		return self;
+	);
+	
+	/*
+	 * AccessCard constructor.
+	 *
+	 * @param uniqueID - the card unique identification
+	 *
+	 * @return AccessCard with the id set to the param value and with no expirationDate
+	 */
+	public AccessCard : nat ==> AccessCard
+	AccessCard(uniqueID) ==
+	(
+		id := uniqueID;
+		expirationDate := nil;
+		return self;
+	);
+	
+	/*
+	 * Checks if the self AccessCard is still valid by comparing the cards expirationDate to the given date.
+	 *
+	 * @param date - the date to validate the card
+	 * @return true if the accesscard is still valid for that date or false otherwise
+	 */
+	public isValid : DateTime ==> bool
+	isValid(date) ==
+	(
+		return not hasExpirationDate() or expirationDate.isGreaterOrEqual(date);
+	);
+	
+	/*
+	 * Getter for the self AccessCard ID.
+	 *
+	 * @return the accessCard unique id
+	 */
+	public getID : () ==> nat
+	getID() == (
+		return self.id;
+	);
+	
+	/*
+	 * Checks if self AccessCard has an expirationDate.
+	 *
+	 * @return true if the accesscard has and expirationDate set or false otherwise
+	 */
+	public hasExpirationDate : () ==> bool
+	hasExpirationDate() == 
+		return self.expirationDate <> nil;
+	
+	/*
+	 * Getter for the self AccessCard expirationDate.
+	 *
+	 * @return the accessCard expirationDate if it exists
+	 */
+	public getExpirationDate : () ==> DateTime
+	getExpirationDate() == 
+		return self.expirationDate
+	pre expirationDate <> nil;
+	
+	/*
+	 * Setter for the self AccessCard expirationDate.
+	 */
+	public setExpirationDate : DateTime ==> ()
+	setExpirationDate(newDate) == 
+		expirationDate := newDate;
+	
+	/*
+	 * Removes the expirationDate for the self AccessCard.
+	 */
+	public removeExpirationDate : () ==> ()
+	removeExpirationDate() == 
+		expirationDate := nil
+	pre expirationDate <> nil;
 		
 end AccessCard

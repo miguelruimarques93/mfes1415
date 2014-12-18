@@ -1,53 +1,64 @@
 class Assert
 
-	operations
-		
-		/**
-		*
-		*/
-		public static assertEqual: ? * ? ==> ()
-		assertEqual(expected, actual) == 
-		if expected <> actual then (
-  		IO`print("Actual value (");
-  		IO`print(actual); 
-  		IO`print(") different from expected (");
-  		IO`print(expected);
-  		IO`println(")\n")
-		)
-		post expected = actual;
-		
-		/**
-		*
-		*/
-		public static assertDifferent: ? * ? ==> ()
-		assertDifferent(expected, actual) == 
-		if expected = actual then (
-  		IO`print("Actual value (");
-  		IO`print(actual); 
-  		IO`print(") different from expected (");
-  		IO`print(expected);
-  		IO`println(")\n")
-		)
-		post expected <> actual;
-		
-		/**
-		* Asserts true.
-		*
-		* @param bool
-		*
-		* @return nothing
-		*/
-		public static assertTrue: bool ==> ()
-		assertTrue(cond) == assertEqual(cond, true);
-		
-		/**
-		* Asserts false.
-		*
-		* @param bool
-		*
-		* @return nothing
-		*/    
-		public static assertFalse: bool ==> ()
-		assertFalse(cond) == assertEqual(cond, false);
+-------------------------------------
+--              Assert             --
+-------------------------------------
+--           Description           --
+-- - - - - - - - - - - - - - - - - --
+--   Class with static operations  --
+-- for asserts.                    --
+-------------------------------------
+
+operations
+	
+	/**
+	* Verifies if two statments are equal.
+	* 
+	* @param expected - the expected statment
+	* @param actual - the actual statment
+	*/
+	public static assertEqual: ? * ? ==> ()
+	assertEqual(expected, actual) == 
+	if expected <> actual then (
+		IO`print("Actual value (");
+		IO`print(actual); 
+		IO`print(") different from expected (");
+		IO`print(expected);
+		IO`println(")\n")
+	)
+	post expected = actual;
+	
+	/**
+	* Verifies if two statments are different.
+	* 
+	* @param notExpected - the not expected statment
+	* @param actual - the actual statment
+	*/
+	public static assertDifferent: ? * ? ==> ()
+	assertDifferent(notExpected, actual) == 
+	if notExpected = actual then (
+		IO`print("Actual value (");
+		IO`print(actual); 
+		IO`print(") different from expected (");
+		IO`print(notExpected);
+		IO`println(")\n")
+	)
+	post notExpected <> actual;
+	
+	/**
+	* Verifies if the given condition is true.
+	*
+	* @param cond - the condition to verify
+	*/
+	public static assertTrue: bool ==> ()
+	assertTrue(cond) == assertEqual(cond, true);
+	
+	/**
+	* Verifies if the given condition is false.
+	*
+	* @param cond - the condition to verify
+	*/    
+	public static assertFalse: bool ==> ()
+	assertFalse(cond) == assertEqual(cond, false);
 
 end Assert

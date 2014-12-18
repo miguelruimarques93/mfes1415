@@ -1,10 +1,32 @@
 class AccessPoint
 
+-------------------------------------
+--           AccessPoint           --
+-------------------------------------
+--           Description           --
+-- - - - - - - - - - - - - - - - - --
+--   Class that defines an access  --
+-- point.                          --
+-------------------------------------
+
 instance variables
+
+	/* Unique AccessPoint ID */
 	id: nat1;
+	
+	/* Facility associated to the AccessPoint */
 	public facility: PhysicalAccessControlSystem`Facility;
-	 
+
 operations
+
+	/*
+	 * AccessPoint constructor.
+	 *
+	 * @param uniqueId - the accesspoint unique identification
+	 * @param fac - the facility to associate with the accesspoint
+	 * 
+	 * @return AccessPoint with the id and facility set to the param values
+	 */
 	public AccessPoint : nat1 * PhysicalAccessControlSystem`Facility ==> AccessPoint
 	AccessPoint(uniqueId, fac) == (
 		id := uniqueId;
@@ -12,9 +34,19 @@ operations
 		return self;
 	);
 	
+	/*
+	 * Getter for the self AccessPoint ID.
+	 *
+	 * @return the accesspoint unique id
+	 */
 	public getId : () ==> nat1
 	getId() == return self.id;
 	
+	/*
+	 * Getter for the facility associated to the self AccessPoint.
+	 *
+	 * @return the accesspoint associated facility
+	 */
 	public getFacility : () ==> PhysicalAccessControlSystem`Facility
 	getFacility() == return self.facility;
 
