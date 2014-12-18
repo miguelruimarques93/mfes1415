@@ -90,7 +90,11 @@ operations
 									pacs.addAccessRuleToAccessPoint(ap, new AccessRule("FEUP", "Students", <allow>));
 									pacs.addUserToGroupOfUsers("Students", user);
 									let ap3: AccessPoint = pacs.createNewAccessPoint(fac) in (
-										Assert`assertTrue(pacs.requestAccess(ac1, ap3, new DateTime(16, 12, 2014)))
+										Assert`assertTrue(pacs.requestAccess(ac1, ap3, new DateTime(16, 12, 2014)));
+										pacs.removeFacilityFromGroup("FEUP",fac);
+										Assert`assertFalse(pacs.requestAccess(ac1, ap3, new DateTime(16, 12, 2014)));
+										
+										pacs.removeAccessPoint(ap3); --post condition ensures access point is removed
 									);
 								);
 								
