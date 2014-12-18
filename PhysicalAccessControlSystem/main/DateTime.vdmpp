@@ -1,14 +1,45 @@
 class DateTime
 
+-------------------------------------
+--             DateTime            --
+-------------------------------------
+--           Description           --
+-- - - - - - - - - - - - - - - - - --
+--   Class that defines a date.    --
+-------------------------------------
+
 instance variables
+	
+	/* DateTime day */
 	day: nat1;
+	
+	/* DateTime month */
 	month: nat1;
+	
+	/* DateTime year */
 	year: nat;
+	
+	/* DateTime hour */
 	hour: nat;
+	
+	/* DateTime minute */
 	minute: nat;
+	
+	/* DateTime second */
 	second: nat;
 	
 operations
+
+	/*
+	 * DateTime constructor with day, month and year. 
+	 * Checks if year is leap year in order to check if input day and month are valid.
+	 *
+	 * @param d - the day to set
+	 * @param m - the month to set
+	 * @param y - the year to set
+	 *
+	 * @return the DateTime with the day, month and year set to the param values.
+	 */
 	public DateTime : nat1 * nat1 * nat ==> DateTime
 	DateTime(d, m, y) == 
 	(
@@ -26,6 +57,20 @@ operations
 	then d <= 30
 	else (m = 2) => if isLeapYear(y) then (d <= 29) else (d <= 28);
 	
+	/*
+	 * DateTime constructor with day, month, year, hour, minute and second. 
+	 * Checks if year is leap year in order to check if input day and month are valid.
+	 * Checks if input hours, minutes and seconds are valid.
+	 *
+	 * @param d - the day to set
+	 * @param m - the month to set
+	 * @param y - the year to set
+	 * @param h - the hour to set
+	 * @param m - the minute to set
+	 * @param s - the second to set
+	 *
+	 * @return the DateTime with the day, month and year set to the param values.
+	 */
 	public DateTime : nat1 * nat1 * nat * nat * nat * nat ==> DateTime
 	DateTime(d, m, y, h, min, s) == 
 	(
@@ -44,30 +89,67 @@ operations
 	else (m = 2) => if isLeapYear(y) then (d <= 29) else (d <= 28) and
 	h < 24 and min < 60 and s < 60;
 	
+	/*
+	 * Getter for the DateTime day.
+	 *
+	 * @return the datetime day
+	 */
 	public getDay : () ==> nat1
 	getDay() == (
 		return self.day;
 	);
 	
+	/*
+	 * Getter for the DateTime month.
+	 *
+	 * @return the datetime month
+	 */
 	public getMonth : () ==> nat1
 	getMonth() == (
 		return self.month;
 	);
 	
+	/*
+	 * Getter for the DateTime year.
+	 *
+	 * @return the datetime year
+	 */
 	public getYear : () ==> nat
 	getYear() == (
 		return self.year;
 	);
 	
+	/*
+	 * Getter for the DateTime hour.
+	 *
+	 * @return the datetime hour
+	 */
 	public getHour: () ==> nat
 	getHour() == return self.hour;
 	
+	/*
+	 * Getter for the DateTime minute.
+	 *
+	 * @return the datetime minute
+	 */
 	public getMinute: () ==> nat
 	getMinute() == return self.minute;
 	
+	/*
+	 * Getter for the DateTime second.
+	 *
+	 * @return the datetime second
+	 */
 	public getSecond: () ==> nat
 	getSecond() == return self.second;
 	
+	/*
+	 * Verifies if DateTime is later then other DateTime.
+	 *
+	 * @param other - the DateTime given to compare to this
+	 *
+	 * @return true if this DateTime is later then given DateTime or false otherwise
+	 */
 	public isLess : DateTime ==> bool
 	isLess(other) == (
 		return (self.year < other.year) or
@@ -79,11 +161,25 @@ operations
 					 ;
 	);
 	
+	/*
+	 * Verifies if DateTime is later or equal to other DateTime.
+	 *
+	 * @param other - the DateTime given to compare to this
+	 *
+	 * @return true if this DateTime is later or equal to given DateTime or false otherwise
+	 */
 	public isLessOrEqual : DateTime ==> bool
 	isLessOrEqual(other) == (
 		return self.isLess(other) or self.isEqual(other);
 	);
 	
+	/*
+	 * Verifies if DateTime is equal to other DateTime.
+	 *
+	 * @param other - the DateTime given to compare to this
+	 *
+	 * @return true if this DateTime is equal to given DateTime or false otherwise
+	 */
 	public isEqual: DateTime ==> bool
 	isEqual(other) == (
 		return self.year = other.year and 
@@ -94,21 +190,47 @@ operations
 					 self.second = other.second;
 	);
 	
+	/*
+	 * Verifies if DateTime is different then other DateTime.
+	 *
+	 * @param other - the DateTime given to compare to this
+	 *
+	 * @return true if this DateTime is different then given DateTime or false otherwise
+	 */
 	public isDifferent: DateTime ==> bool
 	isDifferent(other) == (
 		return not self.isEqual(other);
 	);
 	
+	/*
+	 * Verifies if DateTime is sooner then other DateTime.
+	 *
+	 * @param other - the DateTime given to compare to this
+	 *
+	 * @return true if this DateTime is sooner then given DateTime or false otherwise
+	 */
 	public isGreater : DateTime ==> bool
 	isGreater(other) == (
 		return self.isGreaterOrEqual(other) and self.isDifferent(other);
 	);
 	
+	/*
+	 * Verifies if DateTime is sooner or equal to other DateTime.
+	 *
+	 * @param other - the DateTime given to compare to this
+	 *
+	 * @return true if this DateTime is sooner or equal to given DateTime or false otherwise
+	 */
 	public isGreaterOrEqual : DateTime ==> bool
 	isGreaterOrEqual(other) == (
 		return not self.isLess(other);
 	);
 	
+	/*
+	 * Transforms the DateTime into a String
+	 *
+	 * @return the String format of this DateTime
+	 */
 	public toString : () ==> Utils`String
 	toString() == (
 		return VDMUtil`val2seq_of_char[nat1](day) ^ "-" ^ 
@@ -120,8 +242,17 @@ operations
 	);
 	
 functions
+
+	/*
+	 * Verifies if the given year is a leap year.
+	 * 
+	 * @param y - year to verify
+	 *
+	 * @return true if y is a leap year or false otherwise
+	 */
 	public static isLeapYear : nat -> bool
 	isLeapYear(y) == (
 		if y mod 100 = 0 then y mod 400 = 0 else y mod 4 = 0
-	);	
+	);
+	
 end DateTime
