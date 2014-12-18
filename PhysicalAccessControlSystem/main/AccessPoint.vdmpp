@@ -35,7 +35,7 @@ operations
 	);
 	
 	/*
-	 * Getter for the self AccessPoint ID.
+	 * Getter for the AccessPoint ID.
 	 *
 	 * @return the accesspoint unique id
 	 */
@@ -43,7 +43,7 @@ operations
 	getId() == return self.id;
 	
 	/*
-	 * Getter for the facility associated to the self AccessPoint.
+	 * Getter for the facility associated to the AccessPoint.
 	 *
 	 * @return the accesspoint associated facility
 	 */

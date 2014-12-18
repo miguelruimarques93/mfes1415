@@ -1,15 +1,47 @@
 class AccessRule
+
+-------------------------------------
+--            AccessRule           --
+-------------------------------------
+--           Description           --
+-- - - - - - - - - - - - - - - - - --
+--   Class that defines an access  --
+-- rule.                           --
+-------------------------------------
+
 types
+
+	/* Type, allow or deny */
 	public Type = <allow> | <deny>;
+	
+	/* Temporal constraint of type DateTime */
 	public TemporalConstraint = DateTime -> bool;
 	
 instance variables
+	
+	/* Facility group name */
 	public groupFacility: Utils`String;
+	
+	/* User group name */
 	public groupUser: Utils`String;
+	
+	/* Rule type, can only be or allow or deny */
 	ruleType: Type;
+	
+	/* Rule temporal constraint */
 	temporalConstraint: [TemporalConstraint] := nil;
 	
 operations
+
+	/*
+	 * AccessRule constructor.
+	 *
+	 * @param facs - the facility group name
+	 * @param users - the user group name
+	 * @param type - the rule type (<allow> or <deny>)
+	 *
+	 * @return AccessRule with the facs, users and type set to the param values
+	 */
 	public AccessRule : Utils`String * Utils`String * Type ==> AccessRule
 	AccessRule(facs, users, type) == (
 		groupFacility := facs;
@@ -18,6 +50,16 @@ operations
 		return self;
 	);
 	
+	/*
+	 * AccessRule constructor with temporalConstraint.
+	 *
+	 * @param facs - the facility group name
+	 * @param users - the user group name
+	 * @param type - the rule type (<allow> or <deny>)
+	 * @param constraint - the temporal constraint
+	 *
+	 * @return AccessRule with the facs, users and type set to the param values
+	 */
 	public AccessRule : Utils`String * Utils`String * Type * TemporalConstraint ==> AccessRule
 	AccessRule(facs, users, type, constraint) == (
 		groupFacility := facs;
@@ -27,68 +69,182 @@ operations
 		return self;
 	);
 	
+	/*
+	 * Getter for the AccessRule groupFacility
+	 * 
+	 * @return the AccessRule groupFacility
+	 */
 	public getGroupFacility : () ==> Utils`String
 	getGroupFacility() == return self.groupFacility;
 	
+	/*
+	 * Getter for the AccessRule groupUser
+	 * 
+	 * @return the AccessRule groupUser
+	 */
 	public getGroupUser : () ==> Utils`String
 	getGroupUser() == return self.groupUser;
 	
+	/*
+	 * Getter for the AccessRule ruleType
+	 * 
+	 * @return the AccessRule ruleType
+	 */
 	public getRuleType : () ==> Type
 	getRuleType() == return self.ruleType;
 	
+	/*
+	 * Checks if the AccessRule is still valid by comparing the rule temporalConstraint to the given date.
+	 *
+	 * @param date - the date to validate the card of type DateTime
+	 *
+	 * @return true if the accessrule is still valid for that date or false otherwise
+	 */
 	public isValid : DateTime ==> bool
 	isValid(date) == return not hasTemporalConstraint() or temporalConstraint(date);
 	
+	/*
+	 * Checks if AccessRule has a temporalConstraint.
+	 *
+	 * @return true if the accessrule has a temporalConstraint defined or false otherwise
+	 */
 	public hasTemporalConstraint: () ==> bool
 	hasTemporalConstraint() == return temporalConstraint <> nil;
 	
+	/*
+	 * Setter for the AccessRule temporalConstraint.
+	 *
+	 * @param tc - the date to replace the current AccessRule temporalConstraint
+	 */
 	public setTemporalConstraint : TemporalConstraint ==> ()
 	setTemporalConstraint(tc) == temporalConstraint := tc;
 	
+	/*
+	 * Removes the temporalConstraint for the AccessRule.
+	 */
 	public removeTemporalConstraint : () ==> ()
 	removeTemporalConstraint() == temporalConstraint := nil
 	pre temporalConstraint <> nil;
 	
 functions
+
+	/*
+	 * Creates a temporal constraint for between two DateTimes.
+	 *
+	 * @param first - lower bound for temporal constraint
+	 * @param last - upper bound for temporal constraint
+	 *
+	 * @return the TemporalConstraint for between the two given dates
+	 */
 	public static makeBetweenTemporalConstraint : DateTime * DateTime -> TemporalConstraint
 	makeBetweenTemporalConstraint(first, last) ==
 		lambda d: DateTime & d.isGreaterOrEqual(first) and d.isLessOrEqual(last);
 	
+	/*
+	 * Creates a temporal constraint for after a DateTime.
+	 *
+	 * @param first - lower bound for temporal constraint
+	 *
+	 * @return the TemporalConstraint for after a DateTime
+	 */
 	public static makeAfterTemporalConstraint : DateTime -> TemporalConstraint
 	makeAfterTemporalConstraint(first) ==
 		lambda d: DateTime & d.isGreaterOrEqual(first);
-		
+	
+	/*
+	 * Creates a temporal constraint for before a DateTime.
+	 *
+	 * @param last - upper bound for temporal constraint
+	 *
+	 * @return the TemporalConstraint for before a DateTime
+	 */
 	public static makeBeforeTemporalConstraint : DateTime -> TemporalConstraint
 	makeBeforeTemporalConstraint(last) ==
 		lambda d: DateTime & d.isLessOrEqual(last);
-		
+	
+	/*
+	 * Creates a temporal constraint for between two dates.
+	 *
+	 * @param hourStart - hour for the lower bound date
+	 * @param minuteStart - minute for the lower bound date
+	 * @param secondStart - second for the lower bound date
+	 * @param hourEnd - hour for the upper bound date
+	 * @param minuteEnd - minute for the upper bound date
+	 * @param secondEnd - second for the upper bound date
+	 *
+	 * @return the TemporalConstraint for between the two given dates
+	 */
 	public static makeTimeBetweenTemporalConstraint : nat * nat * nat * nat * nat * nat -> TemporalConstraint
 	makeTimeBetweenTemporalConstraint(hourStart, minuteStart, secondStart, hourEnd, minuteEnd, secondEnd) ==
 		lambda d: DateTime & 
 			d.isGreaterOrEqual(new DateTime(d.getDay(), d.getMonth(), d.getYear(), hourStart, minuteStart, secondStart)) and
 			d.isLessOrEqual(new DateTime(d.getDay(), d.getMonth(), d.getYear(), hourEnd, minuteEnd, secondEnd));
 			
+	/*
+	 * Creates a temporal constraint for after a date.
+	 *
+	 * @param hourStart - hour for the lower bound date
+	 * @param minuteStart - minute for the lower bound date
+	 * @param secondStart - second for the lower bound date
+	 *
+	 * @return the TemporalConstraint for after a date
+	 */
 	public static makeTimeAfterTemporalConstraint : nat * nat * nat -> TemporalConstraint
 	makeTimeAfterTemporalConstraint(hourStart, minuteStart, secondStart) ==
 		lambda d: DateTime & 
 			d.isGreaterOrEqual(new DateTime(d.getDay(), d.getMonth(), d.getYear(), hourStart, minuteStart, secondStart));
 			
+	/*
+	 * Creates a temporal constraint for before a date.
+	 *
+	 * @param hourEnd - hour for the upper bound date
+	 * @param minuteEnd - minute for the upper bound date
+	 * @param secondEnd - second for the upper bound date
+	 *
+	 * @return the TemporalConstraint for before a date
+	 */
 	public static makeTimeBeforeTemporalConstraint : nat * nat * nat -> TemporalConstraint
 	makeTimeBeforeTemporalConstraint(hourEnd, minuteEnd, secondEnd) ==
 		lambda d: DateTime & 
 			d.isLessOrEqual(new DateTime(d.getDay(), d.getMonth(), d.getYear(), hourEnd, minuteEnd, secondEnd));
-			
+	
+	/*
+	 * Creates a temporal constraint for between two dates.
+	 *
+	 * @param minuteStart - minute for the lower bound date
+	 * @param secondStart - second for the lower bound date
+	 * @param minuteEnd - minute for the upper bound date
+	 * @param secondEnd - second for the upper bound date
+	 *
+	 * @return the TemporalConstraint for between the two given dates
+	 */
 	public static makeMinuteBetweenTemporalConstraint : nat * nat * nat * nat -> TemporalConstraint
 	makeMinuteBetweenTemporalConstraint(minuteStart, secondStart, minuteEnd, secondEnd) ==
 		lambda d: DateTime & 
 			d.isGreaterOrEqual(new DateTime(d.getDay(), d.getMonth(), d.getYear(), d.getHour(), minuteStart, secondStart)) and
 			d.isLessOrEqual(new DateTime(d.getDay(), d.getMonth(), d.getYear(), d.getHour(), minuteEnd, secondEnd));
-			
+				
+	/*
+	 * Creates a temporal constraint for after a date.
+	 *
+	 * @param minuteStart - minute for the lower bound date
+	 * @param secondStart - second for the lower bound date
+	 *
+	 * @return the TemporalConstraint for after a date
+	 */
 	public static makeMinuteAfterTemporalConstraint : nat * nat -> TemporalConstraint
 	makeMinuteAfterTemporalConstraint(minuteStart, secondStart) ==
 		lambda d: DateTime & 
 			d.isGreaterOrEqual(new DateTime(d.getDay(), d.getMonth(), d.getYear(), d.getHour(), minuteStart, secondStart));
-			
+	
+	/*
+	 * Creates a temporal constraint for before a date.
+	 *
+	 * @param minuteEnd - minute for the upper bound date
+	 * @param secondEnd - second for the upper bound date
+	 *
+	 * @return the TemporalConstraint for before a date
+	 */
 	public static makeMinuteBeforeTemporalConstraint : nat * nat -> TemporalConstraint
 	makeMinuteBeforeTemporalConstraint(minuteEnd, secondEnd) ==
 		lambda d: DateTime & 

@@ -20,7 +20,7 @@ instance variables
 operations
 
 	/*
-	 * AccessCard constructor.
+	 * AccessCard constructor with expirationDate.
 	 *
 	 * @param uniqueID - the card unique identification
 	 * @param date - the card expiration date
@@ -51,9 +51,10 @@ operations
 	);
 	
 	/*
-	 * Checks if the self AccessCard is still valid by comparing the cards expirationDate to the given date.
+	 * Checks if the AccessCard is still valid by comparing the cards expirationDate to the given date.
 	 *
-	 * @param date - the date to validate the card
+	 * @param date - the date to validate the card of type DateTime
+	 *
 	 * @return true if the accesscard is still valid for that date or false otherwise
 	 */
 	public isValid : DateTime ==> bool
@@ -63,7 +64,7 @@ operations
 	);
 	
 	/*
-	 * Getter for the self AccessCard ID.
+	 * Getter for the AccessCard ID.
 	 *
 	 * @return the accessCard unique id
 	 */
@@ -73,16 +74,16 @@ operations
 	);
 	
 	/*
-	 * Checks if self AccessCard has an expirationDate.
+	 * Checks if AccessCard has an expirationDate.
 	 *
-	 * @return true if the accesscard has and expirationDate set or false otherwise
+	 * @return true if the accesscard has an expirationDate set or false otherwise
 	 */
 	public hasExpirationDate : () ==> bool
 	hasExpirationDate() == 
 		return self.expirationDate <> nil;
 	
 	/*
-	 * Getter for the self AccessCard expirationDate.
+	 * Getter for the AccessCard expirationDate.
 	 *
 	 * @return the accessCard expirationDate if it exists
 	 */
@@ -92,14 +93,16 @@ operations
 	pre expirationDate <> nil;
 	
 	/*
-	 * Setter for the self AccessCard expirationDate.
+	 * Setter for the AccessCard expirationDate.
+	 *
+	 * @param newDate - the date to replace the current AccessCard expirationDate
 	 */
 	public setExpirationDate : DateTime ==> ()
 	setExpirationDate(newDate) == 
 		expirationDate := newDate;
 	
 	/*
-	 * Removes the expirationDate for the self AccessCard.
+	 * Removes the expirationDate for the AccessCard.
 	 */
 	public removeExpirationDate : () ==> ()
 	removeExpirationDate() == 
