@@ -87,6 +87,9 @@ operations
 		);
 		groupUsers := { user.name } <-: groupUsers;
 		accessCardUser := accessCardUser :-> { user };
+		for all ap in set dom accessPolicies do (
+			accessPolicies(ap) := [accessPolicies(ap)(i) | i in set inds accessPolicies(ap) & accessPolicies(ap)(i).groupUser <> user.name]
+		);
 	)
 	pre user in set users
 	post not user in set users and
@@ -122,6 +125,9 @@ operations
 	public removeGroupOfUsers : Utils`String ==> ()
 	removeGroupOfUsers(name) == (
 		groupUsers := { name } <-: groupUsers;
+		for all ap in set dom accessPolicies do (
+			accessPolicies(ap) := [accessPolicies(ap)(i) | i in set inds accessPolicies(ap) & accessPolicies(ap)(i).groupUser <> name]
+		);
 	)
 	pre name in set dom groupUsers
 	post not name in set dom groupUsers;
@@ -137,7 +143,6 @@ operations
 	public removeUserFromGroupOfUsers : Utils`String * User ==> ()
 	removeUserFromGroupOfUsers(groupName, user) == (
 		groupUsers(groupName) := groupUsers(groupName) \ { user };
-		groupUsers := groupUsers :-> { {} };
 	)
 	pre groupName in set dom groupUsers and
 			user in set groupUsers(groupName)
@@ -161,6 +166,9 @@ operations
 		);
 		groupFacilities := { fac.name } <-: groupFacilities;
 		accessPolicies := { ap | ap in set dom accessPolicies & ap.facility <> fac } <-: accessPolicies;
+		for all ap in set dom accessPolicies do (
+			accessPolicies(ap) := [accessPolicies(ap)(i) | i in set inds accessPolicies(ap) & accessPolicies(ap)(i).groupFacility <> fac.name]
+		);
 	)
 	pre fac in set facilities
 	post not fac in set facilities and
@@ -176,9 +184,12 @@ operations
 	public removeGroupOfFacilities : Utils`String ==> ()
 	removeGroupOfFacilities(name) == (
 		groupFacilities := { name } <-: groupFacilities;
+		for all ap in set dom accessPolicies do (
+			accessPolicies(ap) := [accessPolicies(ap)(i) | i in set inds accessPolicies(ap) & accessPolicies(ap)(i).groupFacility <> name]
+		);
 	)
-	pre name in set dom groupUsers
-	post not name in set dom groupUsers;
+	pre name in set dom groupFacilities
+	post not name in set dom groupFacilities;
 	
 	public addFacilityToGroupOfFacilities : Utils`String * Facility ==> ()
 	addFacilityToGroupOfFacilities(groupName, fac) == (
@@ -190,7 +201,6 @@ operations
 	public removeFacilityFromGroup : Utils`String * Facility ==> ()
 	removeFacilityFromGroup(groupName, fac) == (
 		groupFacilities(groupName) := groupFacilities(groupName) \ { fac };
-		groupFacilities := groupFacilities :-> { {} }
 	)
 	pre groupName in set dom groupFacilities and 
 			fac in set facilities and
