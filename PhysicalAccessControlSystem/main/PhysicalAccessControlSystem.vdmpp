@@ -1,4 +1,15 @@
 class PhysicalAccessControlSystem
+
+-------------------------------------
+--   PhysicalAccessControlSystem   --
+-------------------------------------
+--           Description           --
+-- - - - - - - - - - - - - - - - - --
+--   Class that representes the    --
+-- entire physical access control  --
+-- system.                         --
+-------------------------------------
+
 types
 	public User :: name: Utils`String
 	inv mk_User(n) == len n > 0;
@@ -254,8 +265,8 @@ operations
 	requestAccess(ac, accessPoint, date) == (
 		let result = requestAccessImpl(ac, accessPoint, date) in (
 			if result.#1
-			then log(date.toString() ^ ": Access granted to " ^ accessPoint.getFacility().name ^ " for " ^ result.#2 ^ ".") -- TODO add datetime
-			else log(date.toString() ^ ": Access denied to " ^ accessPoint.getFacility().name ^ " for " ^ result.#2 ^ ": " ^ result.#3 ^ ".");  -- TODO add datetime
+			then log(date.toString() ^ ": Access granted to " ^ accessPoint.getFacility().name ^ " for " ^ result.#2 ^ ".")
+			else log(date.toString() ^ ": Access denied to " ^ accessPoint.getFacility().name ^ " for " ^ result.#2 ^ ": " ^ result.#3 ^ ".");
 			
 			return result.#1;
 		);
