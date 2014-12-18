@@ -94,6 +94,8 @@ operations
 										pacs.removeFacilityFromGroup("FEUP",fac);
 										Assert`assertFalse(pacs.requestAccess(ac1, ap3, new DateTime(16, 12, 2014)));
 										
+										pacs.removeFacility(buildB);
+										pacs.removeGroupOfFacilities("FEUP");
 										pacs.removeAccessPoint(ap3); --post condition ensures access point is removed
 									);
 								);

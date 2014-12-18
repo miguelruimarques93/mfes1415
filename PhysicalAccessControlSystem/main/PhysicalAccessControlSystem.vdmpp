@@ -165,7 +165,7 @@ operations
 			groupFacilities(groupName) := groupFacilities(groupName) \ { fac }; 
 		);
 		groupFacilities := { fac.name } <-: groupFacilities;
-		accessPolicies := { ap | ap in set dom accessPolicies & ap.facility <> fac } <-: accessPolicies;
+		accessPolicies := { ap | ap in set dom accessPolicies & ap.facility = fac } <-: accessPolicies;
 		for all ap in set dom accessPolicies do (
 			accessPolicies(ap) := [accessPolicies(ap)(i) | i in set inds accessPolicies(ap) & accessPolicies(ap)(i).groupFacility <> fac.name]
 		);
