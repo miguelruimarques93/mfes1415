@@ -85,7 +85,7 @@ operations
 		for all groupName in set dom groupUsers do (
 			groupUsers(groupName) := groupUsers(groupName) \ { user }; 
 		);
-		groupUsers := groupUsers :-> { };
+		groupUsers := groupUsers :-> { {} };
 		accessCardUser := accessCardUser :-> { user };
 	)
 	pre user in set users
@@ -116,7 +116,8 @@ operations
 	createNewGroupOfUsers(name) == (
 		groupUsers := groupUsers munion { name |-> { } };
 	)
-	pre not name in set dom groupUsers;
+	pre not name in set dom groupUsers
+	post name in set dom groupUsers;
 	
 	public removeGroupOfUsers : Utils`String ==> ()
 	removeGroupOfUsers(name) == (
@@ -130,12 +131,13 @@ operations
 		groupUsers(groupName) := groupUsers(groupName) union { user };
 	)
 	pre groupName in set dom groupUsers 
-	and user in set users;
+	and user in set users
+	post user in set groupUsers(groupName);
 	
 	public removeUserFromGroupOfUsers : Utils`String * User ==> ()
 	removeUserFromGroupOfUsers(groupName, user) == (
 		groupUsers(groupName) := groupUsers(groupName) \ { user };
-		groupUsers := groupUsers :-> { };
+		groupUsers := groupUsers :-> { {} };
 	)
 	pre groupName in set dom groupUsers and
 			user in set groupUsers(groupName)
@@ -157,7 +159,7 @@ operations
 		for all groupName in set dom groupFacilities do (
 			groupFacilities(groupName) := groupFacilities(groupName) \ { fac }; 
 		);
-		groupFacilities := groupFacilities :-> { };
+		groupFacilities := groupFacilities :-> { {} };
 		accessPolicies := { ap | ap in set dom accessPolicies & ap.facility <> fac } <-: accessPolicies;
 	)
 	pre fac in set facilities
@@ -188,7 +190,7 @@ operations
 	public removeFacilityFromGroup : Utils`String * Facility ==> ()
 	removeFacilityFromGroup(groupName, fac) == (
 		groupFacilities(groupName) := groupFacilities(groupName) \ { fac };
-		groupFacilities := groupFacilities :-> { }
+		groupFacilities := groupFacilities :-> { {} }
 	)
 	pre groupName in set dom groupFacilities and 
 			fac in set facilities and
