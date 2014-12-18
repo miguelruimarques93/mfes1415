@@ -11,39 +11,68 @@ class PhysicalAccessControlSystem
 -------------------------------------
 
 types
+
+	/* User Type */
 	public User :: name: Utils`String
+	/* Invariant - User name length must be bigger then 0 */
 	inv mk_User(n) == len n > 0;
 	
+	/* Facility Type */
 	public Facility :: name: Utils`String
+	/* Invariant - Facility name length must be bigger then 0 */
 	inv mk_Facility(n) == len n > 0;
 	
+	/* GroupUser Type as a set of Users */
 	GroupUser = set of User;
+	/* GroupFacility Type as a set of Facilities */
 	GroupFacility = set of Facility;
 	
 instance variables
+
+	/* Log File Name */
 	logFilename: Utils`String;
+	/* IO Overture Standard Library */
 	io: IO := new IO();
 
+	/* Last Access Card ID */
 	lastAccessCardId: nat := 0;
+	/* Last Access Point ID */
 	lastAccessPointId: nat := 0;
 	
+	/* users as a set of User */
 	users: set of User := {};
+	/* groupUsers as a map of String to GroupUser */
 	groupUsers: map Utils`String to GroupUser := {|->};
 	
+	/* facilities as a set of Facility */
 	facilities: set of Facility := {};
+	/* groupfacilities as a map of String to GroupFacility */
 	groupFacilities: map Utils`String to GroupFacility := {|->};
 	
+	/* accessCards as a set of AccessCard */
 	accessCards: set of AccessCard := {};
+	/* accessPolicies as a map of AccessPoint to a seq of AccessRule */
 	accessPolicies: map AccessPoint to seq of AccessRule := {|->};
 	
+	/* accessCardUser as a map of AccessCard to User */
 	accessCardUser: map AccessCard to User := {|->};
-	
-	inv forall ac in set accessCards & forall ac1 in set accessCards \ {ac} & ac1.getID() <> ac.getID();
+
+	/* Invariant - Domain of accessCardUser is a subset of accessCards */
 	inv dom accessCardUser subset accessCards;
-	inv rng accessCardUser subset users
+	/* Invariant - Range of accessCardUser is a subset of users */
+	inv rng accessCardUser subset users;
+	/* Invariant - accessCards ID must be unique */
+	inv forall ac in set accessCards & forall ac1 in set accessCards \ {ac} & ac1.getID() <> ac.getID()
 	
 operations
 
+	/*
+	 * PhysicalAccessControlSystem with filename.
+	 *
+	 * @param filename - a String with the desire log filename
+	 *
+	 * @return PhysicalAccessControlSystem with the logFilename set to the param values 
+	 */
 	public PhysicalAccessControlSystem: Utils`String ==> PhysicalAccessControlSystem
 	PhysicalAccessControlSystem(filename) == (
 		logFilename := filename;
@@ -51,9 +80,18 @@ operations
 		return self;
 	);
 	
+	/*
+	 * Writes the given String val to the log file.
+	 *
+	 * @param val - value to write to the log file
+	 */
 	private log : Utils`String ==> ()
 	log(val) == if not io.fecho(logFilename, val ^ "\n" , <append>) then IO`println("Error writing message to log file: " ^ val);
 
+	/*
+	 *
+	 * 
+	 */
 	public createNewAccessCard: () ==> AccessCard
 	createNewAccessCard() == (
 		lastAccessCardId := lastAccessCardId + 1;
