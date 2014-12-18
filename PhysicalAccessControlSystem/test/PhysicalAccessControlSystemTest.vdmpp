@@ -12,15 +12,15 @@ operations
 					  user1: PhysicalAccessControlSystem`User = pacs.createNewUser("Cleto") in ( 
 					IO`println(pacs);
 					IO`println(user);
-					let feup: PhysicalAccessControlSystem`Facility = pacs.createNewFacility("FEUP") in (
+					let buildB: PhysicalAccessControlSystem`Facility = pacs.createNewFacility("Building B") in (
 						IO`println(pacs);
-						IO`println(feup);	
+						IO`println(buildB);	
 						let ac: AccessCard = pacs.createNewAccessCard(),
 								ac1: AccessCard = pacs.createNewTemporaryAccessCard(new DateTime(15, 12, 2014))
 						 in (
 							IO`println(pacs);
 							IO`println(ac);	
-							let ap: AccessPoint = pacs.createNewAccessPoint(feup) in (
+							let ap: AccessPoint = pacs.createNewAccessPoint(buildB) in (
 								IO`println(pacs);
 								IO`println(ap);	
 			
@@ -28,12 +28,12 @@ operations
 								pacs.associateAccessCardToUser(ac1, user1);
 								
 								IO`println(pacs);
-								pacs.addAccessRuleToAccessPoint(ap, new AccessRule("FEUP", "Miguel", <deny>));
+								pacs.addAccessRuleToAccessPoint(ap, new AccessRule("Building B", "Miguel", <deny>));
 								IO`println(pacs);
 			
 								Assert`assertFalse(pacs.requestAccess(ac, ap, new DateTime(16, 12, 2014)));
 								
-								pacs.addAccessRuleToAccessPoint(ap, new AccessRule("FEUP", "Miguel", <allow>));
+								pacs.addAccessRuleToAccessPoint(ap, new AccessRule("Building B", "Miguel", <allow>));
 								
 								Assert`assertTrue(pacs.requestAccess(ac, ap, new DateTime(16, 12, 2014)));
 								
@@ -53,9 +53,42 @@ operations
 								Assert`assertTrue(pacs.requestAccess(ac1, ap, new DateTime(16, 12, 2014)));
 								Assert`assertTrue(pacs.requestAccess(ac1, ap, new DateTime(14, 12, 2014)));
 								
-								let ap1: AccessPoint = pacs.createNewAccessPoint(feup) in (
+								let ap1: AccessPoint = pacs.createNewAccessPoint(buildB) in (
 									Assert`assertTrue(ap1.getId() > ap.getId());
 								);
+								
+								pacs.createNewGroupOfUsers("Students"); --post condition ensures group exists
+								
+								pacs.removeGroupOfUsers("Students"); --post condition ensures group does not exist
+								
+								pacs.createNewGroupOfUsers("Students");
+								
+								pacs.addUserToGroupOfUsers("Students", user); --post condition ensures member is added 
+								
+								pacs.addAccessRuleToAccessPoint(ap, new AccessRule("Building B", "Miguel", <deny>));
+								Assert`assertFalse(pacs.requestAccess(ac1, ap, new DateTime(16, 12, 2014)));
+								pacs.addAccessRuleToAccessPoint(ap, new AccessRule("Building B", "Students", <allow>));
+								
+								Assert`assertTrue(pacs.requestAccess(ac1, ap, new DateTime(16, 12, 2014)));
+								
+								pacs.removeUserFromGroupOfUsers("Students", user);
+								
+								Assert`assertFalse(pacs.requestAccess(ac1, ap, new DateTime(16, 12, 2014)));
+								
+								let fac: PhysicalAccessControlSystem`Facility = pacs.createNewFacility("Secretaria") in (
+									pacs.removeFacility(fac);
+								);
+								
+								let fac: PhysicalAccessControlSystem`Facility = pacs.createNewFacility("Secretaria") in (
+									pacs.createNewGroupOfFacilities("FEUP");
+									pacs.removeGroupOfFacilities("FEUP");
+									
+									pacs.createNewGroupOfFacilities("FEUP");
+									pacs.addFacilityToGroupOfFacilities("FEUP", fac);
+									pacs.addFacilityToGroupOfFacilities("FEUP", buildB);
+									
+								);
+								
 			)))));
 		);
 
