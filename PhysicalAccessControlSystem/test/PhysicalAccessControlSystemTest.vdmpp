@@ -20,16 +20,23 @@ operations
 	main() ==
 	(
 		
+		-------"Test.log" argument will make the program create a "Test.log" file where all access requests are logged
+		--------This satisfies requirement R10. (requires manual check of the file to confirm)
 		let pacs: PhysicalAccessControlSystem = new PhysicalAccessControlSystem("Test.log") in (
 			IO`println(pacs);
+			----- Testing user creation
 			let user: PhysicalAccessControlSystem`User = pacs.createNewUser("Miguel"),
 				  user1: PhysicalAccessControlSystem`User = pacs.createNewUser("Cleto") in ( 
 				IO`println(pacs);
 				IO`println(user);
+				
+				----------------------------Test Requirement R1. ----------------------------
 				let buildB: PhysicalAccessControlSystem`Facility = pacs.createNewFacility("Building B") in (
 					IO`println(pacs);
 					IO`println(buildB);	
+					--- Test card creation
 					let ac: AccessCard = pacs.createNewAccessCard(),
+					----------------------------Test Requirement R4. (argument is expiration date)  ----------------------------
 							ac1: AccessCard = pacs.createNewTemporaryAccessCard(new DateTime(15, 12, 2014))
 					 in (
 						IO`println(pacs);
@@ -38,6 +45,7 @@ operations
 							IO`println(pacs);
 							IO`println(ap);	
 		
+							----------------------------Test Requirement R3. ----------------------------
 							pacs.associateAccessCardToUser(ac, user);
 							pacs.associateAccessCardToUser(ac1, user1);
 							
@@ -45,15 +53,21 @@ operations
 							pacs.addAccessRuleToAccessPoint(ap, new AccessRule("Building B", "Miguel", <deny>));
 							IO`println(pacs);
 		
+							----------------------------Test Requirement R2 and R9. ----------------------------
 							Assert`assertFalse(pacs.requestAccess(ac, ap, new DateTime(16, 12, 2014)));
 							
+							----------------------------Test Requirement R7. ----------------------------
 							pacs.addAccessRuleToAccessPoint(ap, new AccessRule("Building B", "Miguel", <allow>));
 							
+							----------------------------Additional Test for Requirement R2 and R9. ----------------------------
 							Assert`assertTrue(pacs.requestAccess(ac, ap, new DateTime(16, 12, 2014)));
 							
+							--Testing optional feature: Transfer cards between users
+							----------------------------Also satisfies requirement R5. since it allows reusing cards----------------------------
 							pacs.removeUserAccessCard(user);
 							pacs.transferUserAccessCard(user1, user);
 							
+							----------------------------Additional Test for Requirement R2. ----------------------------
 							Assert`assertFalse(pacs.requestAccess(ac, ap, new DateTime(16, 12, 2014)));
 							
 							pacs.removeAccessCard(ac);
@@ -71,6 +85,8 @@ operations
 								Assert`assertTrue(ap1.getId() > ap.getId());
 							);
 							
+							
+							----------------------------Test Requirement R6. ----------------------------
 							pacs.createNewGroupOfUsers("Students"); --post condition ensures group exists
 							
 							pacs.removeGroupOfUsers("Students"); --post condition ensures group does not exist
@@ -79,21 +95,27 @@ operations
 							
 							pacs.addUserToGroupOfUsers("Students", user); --post condition ensures member is added 
 							
+							
+							----------------------------Test Requirement R8 and additional test for R7. ----------------------------
 							pacs.addAccessRuleToAccessPoint(ap, new AccessRule("Building B", "Miguel", <deny>));
 							Assert`assertFalse(pacs.requestAccess(ac1, ap, new DateTime(16, 12, 2014)));
 							pacs.addAccessRuleToAccessPoint(ap, new AccessRule("Building B", "Students", <allow>));
 							
+							----------------------------Additional Test for Requirement R2 and R9. ----------------------------
 							Assert`assertTrue(pacs.requestAccess(ac1, ap, new DateTime(16, 12, 2014)));
 							
 							pacs.removeUserFromGroupOfUsers("Students", user);
 							
 							Assert`assertFalse(pacs.requestAccess(ac1, ap, new DateTime(16, 12, 2014)));
 							
+							----------------------------Additional Test for Requirement R1. ----------------------------
 							let fac: PhysicalAccessControlSystem`Facility = pacs.createNewFacility("Secretaria") in (
 								pacs.removeFacility(fac);
 							);
 							
+							
 							let fac: PhysicalAccessControlSystem`Facility = pacs.createNewFacility("Secretaria") in (
+								----------------------------Additional Test for Requirement R6. ----------------------------
 								pacs.createNewGroupOfFacilities("FEUP");
 								pacs.removeGroupOfFacilities("FEUP");
 								
