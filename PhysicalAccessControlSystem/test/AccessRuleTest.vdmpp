@@ -1,121 +1,196 @@
 class AccessRuleTest
-	instance variables
-		
-	operations		
-		public testTemporalConstraints: () ==> ()
-		testTemporalConstraints() ==
-			let ar: AccessRule = new AccessRule(
-					"FEUP", 
-					"User1", 
-					<allow>, 
-					AccessRule`makeBetweenTemporalConstraint(new DateTime(1,1,2000), new DateTime(1,1,2001))) in (
-				Assert`assertTrue(ar.hasTemporalConstraint());
-				
-				Assert`assertTrue(ar.isValid(new DateTime(1, 2, 2000)));
-				Assert`assertFalse(ar.isValid(new DateTime(1, 2, 1999)));
-				Assert`assertFalse(ar.isValid(new DateTime(1, 2, 2001)));
-				
-				ar.removeTemporalConstraint();
-				Assert`assertFalse(ar.hasTemporalConstraint());
-				
-				ar.setTemporalConstraint(AccessRule`makeAfterTemporalConstraint(new DateTime(1,1,2000)));
-				Assert`assertTrue(ar.hasTemporalConstraint());
-				
-				Assert`assertTrue(ar.isValid(new DateTime(1, 2, 2000)));
-				Assert`assertFalse(ar.isValid(new DateTime(1, 2, 1999)));
-				Assert`assertTrue(ar.isValid(new DateTime(1, 2, 2001)));
-				
-				ar.setTemporalConstraint(AccessRule`makeBeforeTemporalConstraint(new DateTime(1,1,2000)));
-				Assert`assertTrue(ar.hasTemporalConstraint());
-				
-				Assert`assertFalse(ar.isValid(new DateTime(1, 2, 2000)));
-				Assert`assertTrue(ar.isValid(new DateTime(1, 2, 1999)));
-				Assert`assertFalse(ar.isValid(new DateTime(1, 2, 2001)));
-				
-				
-				
-				ar.setTemporalConstraint(AccessRule`makeTimeBetweenTemporalConstraint(10, 0, 0, 11, 0, 0));
-				Assert`assertTrue(ar.hasTemporalConstraint());
-				
-				Assert`assertTrue(ar.isValid(new DateTime(1, 2, 2000, 10, 30, 0)));
-				Assert`assertTrue(ar.isValid(new DateTime(2, 2, 2000, 10, 30, 0)));
-				Assert`assertTrue(ar.isValid(new DateTime(2, 3, 2000, 10, 30, 0)));
-				Assert`assertTrue(ar.isValid(new DateTime(2, 3, 2001, 10, 30, 0)));
-				Assert`assertFalse(ar.isValid(new DateTime(1, 2, 1999, 9, 30, 0)));
-				Assert`assertFalse(ar.isValid(new DateTime(1, 2, 2001, 11, 30, 0)));
-				
-				ar.setTemporalConstraint(AccessRule`makeTimeAfterTemporalConstraint(10, 0, 0));
-				Assert`assertTrue(ar.hasTemporalConstraint());
-				
-				Assert`assertTrue(ar.isValid(new DateTime(1, 2, 2000, 10, 30, 0)));
-				Assert`assertTrue(ar.isValid(new DateTime(2, 2, 2000, 10, 30, 0)));
-				Assert`assertTrue(ar.isValid(new DateTime(2, 3, 2000, 10, 30, 0)));
-				Assert`assertTrue(ar.isValid(new DateTime(2, 3, 2001, 10, 30, 0)));
-				Assert`assertTrue(ar.isValid(new DateTime(1, 2, 2001, 11, 30, 0)));
-				Assert`assertFalse(ar.isValid(new DateTime(1, 2, 1999, 9, 30, 0)));
-				
-				ar.setTemporalConstraint(AccessRule`makeTimeBeforeTemporalConstraint(10, 0, 0));
-				Assert`assertTrue(ar.hasTemporalConstraint());
-				
-				Assert`assertFalse(ar.isValid(new DateTime(1, 2, 2000, 10, 30, 0)));
-				Assert`assertFalse(ar.isValid(new DateTime(2, 2, 2000, 10, 30, 0)));
-				Assert`assertFalse(ar.isValid(new DateTime(2, 3, 2000, 10, 30, 0)));
-				Assert`assertFalse(ar.isValid(new DateTime(2, 3, 2001, 10, 30, 0)));
-				Assert`assertTrue(ar.isValid(new DateTime(1, 2, 1999, 9, 30, 0)));
-				Assert`assertFalse(ar.isValid(new DateTime(1, 2, 2001, 11, 30, 0)));
-				
-				
-				
-				ar.setTemporalConstraint(AccessRule`makeMinuteBetweenTemporalConstraint(10, 0, 30, 0));
-				Assert`assertTrue(ar.hasTemporalConstraint());
-				
-				Assert`assertTrue(ar.isValid(new DateTime(1, 2, 2000, 10, 20, 0)));
-				Assert`assertTrue(ar.isValid(new DateTime(2, 2, 2000, 10, 20, 0)));
-				Assert`assertTrue(ar.isValid(new DateTime(2, 3, 2000, 10, 20, 0)));
-				Assert`assertTrue(ar.isValid(new DateTime(2, 3, 2001, 10, 20, 0)));
-				Assert`assertFalse(ar.isValid(new DateTime(1, 2, 1999, 9, 5, 0)));
-				Assert`assertFalse(ar.isValid(new DateTime(1, 2, 2001, 11, 35, 0)));
-				
-				ar.setTemporalConstraint(AccessRule`makeMinuteAfterTemporalConstraint(10, 0));
-				Assert`assertTrue(ar.hasTemporalConstraint());
-				
-				Assert`assertTrue(ar.isValid(new DateTime(1, 2, 2000, 10, 30, 0)));
-				Assert`assertTrue(ar.isValid(new DateTime(2, 2, 2000, 10, 30, 0)));
-				Assert`assertTrue(ar.isValid(new DateTime(2, 3, 2000, 10, 30, 0)));
-				Assert`assertTrue(ar.isValid(new DateTime(2, 3, 2001, 10, 30, 0)));
-				Assert`assertTrue(ar.isValid(new DateTime(1, 2, 2001, 11, 30, 0)));
-				Assert`assertFalse(ar.isValid(new DateTime(1, 2, 1999, 9, 5, 0)));
-				
-				ar.setTemporalConstraint(AccessRule`makeMinuteBeforeTemporalConstraint(10, 0));
-				Assert`assertTrue(ar.hasTemporalConstraint());
-				
-				Assert`assertFalse(ar.isValid(new DateTime(1, 2, 2000, 10, 30, 0)));
-				Assert`assertFalse(ar.isValid(new DateTime(2, 2, 2000, 10, 30, 0)));
-				Assert`assertFalse(ar.isValid(new DateTime(2, 3, 2000, 10, 30, 0)));
-				Assert`assertFalse(ar.isValid(new DateTime(2, 3, 2001, 10, 30, 0)));
-				Assert`assertTrue(ar.isValid(new DateTime(1, 2, 1999, 9, 5, 0)));
-				Assert`assertFalse(ar.isValid(new DateTime(1, 2, 2001, 11, 30, 0)));
-			
-				
-			);
-		
-		public testGetters: () ==> ()
-		testGetters() == 
-			let ar : AccessRule = new AccessRule("FEUP", "User1", <allow>) in (
-				Assert`assertFalse(ar.hasTemporalConstraint());
-			
-				Assert`assertEqual(ar.getGroupFacility(), "FEUP");
-				Assert`assertEqual(ar.getGroupUser(), "User1");
-				Assert`assertEqual(ar.getRuleType(), <allow>);
-			);
+
+-------------------------------------
+--          AccessRuleTest         --
+-------------------------------------
+--           Description           --
+-- - - - - - - - - - - - - - - - - --
+--   Test class for AccessRule.    --
+-------------------------------------
+
+instance variables
 	
-		public static main: () ==> ()
-    main() ==
-    (
-    	let art : AccessRuleTest = new AccessRuleTest() in (
-    		art.testTemporalConstraints();
-    		art.testGetters();
-      );
+operations
+	
+	/*
+	 * Tests every temporalConstraint maker there is for the AccessRule class.
+	 */
+	public testTemporalConstraints: () ==> ()
+	testTemporalConstraints() ==
+		/* ar - ("FEUP", "User1", <allow>, TemporalConstraint) */
+		let ar: AccessRule = new AccessRule(
+				"FEUP", 
+				"User1", 
+				<allow>,
+				/* Sets ar temporalConstraint for between two DateTimes, (1, 1, 2000) and (1, 1, 2001) */
+				AccessRule`makeBetweenTemporalConstraint(new DateTime(1,1,2000), new DateTime(1,1,2001))) in (
+			/* Checks if ar temporalConstraint was set */
+			Assert`assertTrue(ar.hasTemporalConstraint());
+			
+			/* Checks if ar temporalConstraint is valid for DateTime - (1, 2, 2000) */
+			Assert`assertTrue(ar.isValid(new DateTime(1, 2, 2000)));
+			/* Checks if ar temporalConstraint is not valid for DateTime - (1, 2, 1999) */
+			Assert`assertFalse(ar.isValid(new DateTime(1, 2, 1999)));
+			/* Checks if ar temporalConstraint is not valid for DateTime - (1, 2, 2001) */
+			Assert`assertFalse(ar.isValid(new DateTime(1, 2, 2001)));
+			
+			/* Removes the ar temporalConstraint and checks if it was removed successfully */
+			ar.removeTemporalConstraint();
+			Assert`assertFalse(ar.hasTemporalConstraint());
+			
+			/* Sets ar temporalConstraint for after a DateTime, (1, 1, 2000), and checks if it was set sucessfully */
+			ar.setTemporalConstraint(AccessRule`makeAfterTemporalConstraint(new DateTime(1,1,2000)));
+			Assert`assertTrue(ar.hasTemporalConstraint());
+			
+			/* Checks if ar temporalConstraint is valid for DateTime - (1, 2, 2000) */
+			Assert`assertTrue(ar.isValid(new DateTime(1, 2, 2000)));
+			/* Checks if ar temporalConstraint is not valid for DateTime - (1, 2, 1999) */
+			Assert`assertFalse(ar.isValid(new DateTime(1, 2, 1999)));
+			/* Checks if ar temporalConstraint is valid for DateTime - (1, 2, 2001) */
+			Assert`assertTrue(ar.isValid(new DateTime(1, 2, 2001)));
+			
+			/* Sets ar temporalConstraint for before a DateTime, (1, 1, 2000), and checks if it was set sucessfully */
+			ar.setTemporalConstraint(AccessRule`makeBeforeTemporalConstraint(new DateTime(1,1,2000)));
+			Assert`assertTrue(ar.hasTemporalConstraint());
+			
+			/* Checks if ar temporalConstraint is not valid for DateTime - (1, 2, 2000) */
+			Assert`assertFalse(ar.isValid(new DateTime(1, 2, 2000)));
+			/* Checks if ar temporalConstraint is valid for DateTime - (1, 2, 1999) */
+			Assert`assertTrue(ar.isValid(new DateTime(1, 2, 1999)));
+			/* Checks if ar temporalConstraint is not valid for DateTime - (1, 2, 2001) */
+			Assert`assertFalse(ar.isValid(new DateTime(1, 2, 2001)));
+			
+			/* Sets ar temporalConstraint for between times, (hourStart, minuteStart, secondStart, hourEnd, minuteEnd, secondEnd) - (10, 0, 0, 11, 0, 0), and checks if it was set successfully */
+			ar.setTemporalConstraint(AccessRule`makeTimeBetweenTemporalConstraint(10, 0, 0, 11, 0, 0));
+			Assert`assertTrue(ar.hasTemporalConstraint());
+			
+			/* Checks if ar temporalConstraint is valid for DateTime - (1, 2, 2000, 10, 30, 0) */
+			Assert`assertTrue(ar.isValid(new DateTime(1, 2, 2000, 10, 30, 0)));
+			/* Checks if ar temporalConstraint is valid for DateTime - (2, 2, 2000, 10, 30, 0) */
+			Assert`assertTrue(ar.isValid(new DateTime(2, 2, 2000, 10, 30, 0)));
+			/* Checks if ar temporalConstraint is valid for DateTime - (2, 3, 2000, 10, 30, 0) */
+			Assert`assertTrue(ar.isValid(new DateTime(2, 3, 2000, 10, 30, 0)));
+			/* Checks if ar temporalConstraint is valid for DateTime - (2, 3, 2001, 10, 30, 0) */
+			Assert`assertTrue(ar.isValid(new DateTime(2, 3, 2001, 10, 30, 0)));
+			/* Checks if ar temporalConstraint is not valid for DateTime - (1, 2, 2001, 11, 30, 0) */
+			Assert`assertFalse(ar.isValid(new DateTime(1, 2, 2001, 11, 30, 0)));
+			/* Checks if ar temporalConstraint is not valid for DateTime - (1, 2, 1999, 9, 30, 0) */
+			Assert`assertFalse(ar.isValid(new DateTime(1, 2, 1999, 9, 30, 0)));
+			
+			/* Sets ar temporalConstraint for after time, (hourStart, minuteStart, secondStart) - (10, 0, 0), and checks if it was set successfully */
+			ar.setTemporalConstraint(AccessRule`makeTimeAfterTemporalConstraint(10, 0, 0));
+			Assert`assertTrue(ar.hasTemporalConstraint());
+			
+			/* Checks if ar temporalConstraint is valid for DateTime - (1, 2, 2000, 10, 30, 0) */
+			Assert`assertTrue(ar.isValid(new DateTime(1, 2, 2000, 10, 30, 0)));
+			/* Checks if ar temporalConstraint is valid for DateTime - (2, 2, 2000, 10, 30, 0) */
+			Assert`assertTrue(ar.isValid(new DateTime(2, 2, 2000, 10, 30, 0)));
+			/* Checks if ar temporalConstraint is valid for DateTime - (2, 3, 2000, 10, 30, 0) */
+			Assert`assertTrue(ar.isValid(new DateTime(2, 3, 2000, 10, 30, 0)));
+			/* Checks if ar temporalConstraint is valid for DateTime - (2, 3, 2001, 10, 30, 0) */
+			Assert`assertTrue(ar.isValid(new DateTime(2, 3, 2001, 10, 30, 0)));
+			/* Checks if ar temporalConstraint is valid for DateTime - (1, 2, 2001, 11, 30, 0) */
+			Assert`assertTrue(ar.isValid(new DateTime(1, 2, 2001, 11, 30, 0)));
+			/* Checks if ar temporalConstraint is not valid for DateTime - (1, 2, 1999, 9, 30, 0) */
+			Assert`assertFalse(ar.isValid(new DateTime(1, 2, 1999, 9, 30, 0)));
+			
+			/* Sets ar temporalConstraint for before time, (hourEnd, minuteEnd, secondEnd) - (10, 0, 0), and checks if it was set successfully */
+			ar.setTemporalConstraint(AccessRule`makeTimeBeforeTemporalConstraint(10, 0, 0));
+			Assert`assertTrue(ar.hasTemporalConstraint());
+			
+			/* Checks if ar temporalConstraint is not valid for DateTime - (1, 2, 2000, 10, 30, 0) */
+			Assert`assertFalse(ar.isValid(new DateTime(1, 2, 2000, 10, 30, 0)));
+			/* Checks if ar temporalConstraint is valid for DateTime - (2, 2, 2000, 10, 30, 0) */
+			Assert`assertFalse(ar.isValid(new DateTime(2, 2, 2000, 10, 30, 0)));
+			/* Checks if ar temporalConstraint is valid for DateTime - (2, 3, 2000, 10, 30, 0) */
+			Assert`assertFalse(ar.isValid(new DateTime(2, 3, 2000, 10, 30, 0)));
+			/* Checks if ar temporalConstraint is valid for DateTime - (2, 3, 2001, 10, 30, 0) */
+			Assert`assertFalse(ar.isValid(new DateTime(2, 3, 2001, 10, 30, 0)));
+			/* Checks if ar temporalConstraint is valid for DateTime - (1, 2, 2001, 11, 30, 0) */
+			Assert`assertFalse(ar.isValid(new DateTime(1, 2, 2001, 11, 30, 0)));
+			/* Checks if ar temporalConstraint is not valid for DateTime - (1, 2, 1999, 9, 30, 0) */
+			Assert`assertTrue(ar.isValid(new DateTime(1, 2, 1999, 9, 30, 0)));
+			
+			
+			/* Sets ar temporalConstraint for between minutes, (minuteStart, secondStart, minuteEnd, secondEnd) - (10, 0, 30, 0), and checks if it was set successfully */
+			ar.setTemporalConstraint(AccessRule`makeMinuteBetweenTemporalConstraint(10, 0, 30, 0));
+			Assert`assertTrue(ar.hasTemporalConstraint());
+			
+			/* Checks if ar temporalConstraint is valid for DateTime - (1, 2, 2000, 10, 20, 0) */
+			Assert`assertTrue(ar.isValid(new DateTime(1, 2, 2000, 10, 20, 0)));
+			/* Checks if ar temporalConstraint is valid for DateTime - (2, 2, 2000, 10, 20, 0) */
+			Assert`assertTrue(ar.isValid(new DateTime(2, 2, 2000, 10, 20, 0)));
+			/* Checks if ar temporalConstraint is valid for DateTime - (2, 3, 2000, 10, 20, 0) */
+			Assert`assertTrue(ar.isValid(new DateTime(2, 3, 2000, 10, 20, 0)));
+			/* Checks if ar temporalConstraint is valid for DateTime - (2, 3, 2001, 10, 20, 0) */
+			Assert`assertTrue(ar.isValid(new DateTime(2, 3, 2001, 10, 20, 0)));
+			/* Checks if ar temporalConstraint is not valid for DateTime - (1, 2, 2001, 11, 35, 0) */
+			Assert`assertFalse(ar.isValid(new DateTime(1, 2, 2001, 11, 35, 0)));
+			/* Checks if ar temporalConstraint is not valid for DateTime - (1, 2, 1999, 9, 5, 0) */
+			Assert`assertFalse(ar.isValid(new DateTime(1, 2, 1999, 9, 5, 0)));
+			
+			/* Sets ar temporalConstraint for after minute, (minuteStart, secondStart) - (10, 0), and checks if it was set successfully */
+			ar.setTemporalConstraint(AccessRule`makeMinuteAfterTemporalConstraint(10, 0));
+			Assert`assertTrue(ar.hasTemporalConstraint());
+			
+			/* Checks if ar temporalConstraint is valid for DateTime - (1, 2, 2000, 10, 30, 0) */
+			Assert`assertTrue(ar.isValid(new DateTime(1, 2, 2000, 10, 30, 0)));
+			/* Checks if ar temporalConstraint is valid for DateTime - (2, 2, 2000, 10, 30, 0) */
+			Assert`assertTrue(ar.isValid(new DateTime(2, 2, 2000, 10, 30, 0)));
+			/* Checks if ar temporalConstraint is valid for DateTime - (2, 3, 2000, 10, 30, 0) */
+			Assert`assertTrue(ar.isValid(new DateTime(2, 3, 2000, 10, 30, 0)));
+			/* Checks if ar temporalConstraint is valid for DateTime - (2, 3, 2001, 10, 30, 0) */
+			Assert`assertTrue(ar.isValid(new DateTime(2, 3, 2001, 10, 30, 0)));
+			/* Checks if ar temporalConstraint is not valid for DateTime - (1, 2, 2001, 11, 30, 0) */
+			Assert`assertTrue(ar.isValid(new DateTime(1, 2, 2001, 11, 30, 0)));
+			/* Checks if ar temporalConstraint is valid for DateTime - (1, 2, 1999, 9, 5, 0) */
+			Assert`assertFalse(ar.isValid(new DateTime(1, 2, 1999, 9, 5, 0)));
+			
+			/* Sets ar temporalConstraint for before minute, (minuteEnd, secondEnd) - (10, 0), and checks if it was set successfully */
+			ar.setTemporalConstraint(AccessRule`makeMinuteBeforeTemporalConstraint(10, 0));
+			Assert`assertTrue(ar.hasTemporalConstraint());
+			
+			/* Checks if ar temporalConstraint is not valid for DateTime - (1, 2, 2000, 10, 30, 0) */
+			Assert`assertFalse(ar.isValid(new DateTime(1, 2, 2000, 10, 30, 0)));
+			/* Checks if ar temporalConstraint is not valid for DateTime - (2, 2, 2000, 10, 30, 0) */
+			Assert`assertFalse(ar.isValid(new DateTime(2, 2, 2000, 10, 30, 0)));
+			/* Checks if ar temporalConstraint is not valid for DateTime - (2, 3, 2000, 10, 30, 0) */
+			Assert`assertFalse(ar.isValid(new DateTime(2, 3, 2000, 10, 30, 0)));
+			/* Checks if ar temporalConstraint is not valid for DateTime - (2, 3, 2001, 10, 30, 0) */
+			Assert`assertFalse(ar.isValid(new DateTime(2, 3, 2001, 10, 30, 0)));
+			/* Checks if ar temporalConstraint is not valid for DateTime - (1, 2, 2001, 11, 30, 0) */
+			Assert`assertFalse(ar.isValid(new DateTime(1, 2, 2001, 11, 30, 0)));
+			/* Checks if ar temporalConstraint is valid for DateTime - (1, 2, 1999, 9, 5, 0) */
+			Assert`assertTrue(ar.isValid(new DateTime(1, 2, 1999, 9, 5, 0)));
+		);
+	
+	/*
+	 * Tests the getters for the AccessRule class.
+	 */
+	public testGetters: () ==> ()
+	testGetters() == 
+		/* ar - ("FEUP", "User1", <allow>") */
+		let ar : AccessRule = new AccessRule("FEUP", "User1", <allow>) in (
+			/* Checks if ar does not have a temporal constraint */
+			Assert`assertFalse(ar.hasTemporalConstraint());
+			/* Checks if ar facility group was set to "FEUP" */
+			Assert`assertEqual(ar.getGroupFacility(), "FEUP");
+			/* Checks if ar user group was set to "User1" */
+			Assert`assertEqual(ar.getGroupUser(), "User1");
+			/* Checks if Rule type is of type <allow> */
+			Assert`assertEqual(ar.getRuleType(), <allow>);
+		);
+
+	/*
+	 * Calls the tests.
+	 */
+	public static main: () ==> ()
+  main() ==
+  (
+  	let art : AccessRuleTest = new AccessRuleTest() in (
+  		art.testTemporalConstraints();
+  		art.testGetters();
     );
+  );
 
 end AccessRuleTest
