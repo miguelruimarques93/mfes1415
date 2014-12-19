@@ -1,54 +1,95 @@
 class DateTimeTest
-	instance variables
-		d: DateTime := new DateTime(30, 1, 2010, 10, 25, 5)
 
-	operations
+-------------------------------------
+--           DateTimeTest          --
+-------------------------------------
+--           Description           --
+-- - - - - - - - - - - - - - - - - --
+--   Test class for DateTime.      --
+-------------------------------------
 
-		private testLeapYear: () ==> ()
-		testLeapYear() ==
-		(
-			Assert`assertTrue(DateTime`isLeapYear(2000));
-			Assert`assertTrue(DateTime`isLeapYear(2004));
-			Assert`assertFalse(DateTime`isLeapYear(2100));
-			Assert`assertFalse(DateTime`isLeapYear(2001));
-			
-			IO`println(new DateTime(29, 2, 2000));
-			IO`println(new DateTime(28, 2, 2001));
-			IO`println(new DateTime(30, 6, 2001));
-			IO`println(new DateTime(30, 6, 2001, 11, 30, 24));
-		);
+instance variables
+
+	/* DateTime */
+	d: DateTime := new DateTime(30, 1, 2010, 10, 25, 5)
+
+operations
+
+	/*
+	 * Tests to verify if a DateTime year is a leapyear.
+	 */
+	private testLeapYear: () ==> ()
+	testLeapYear() ==
+	(
+		/* Checks if 2000 is a leap year */
+		Assert`assertTrue(DateTime`isLeapYear(2000));
+		/* Checks if 2004 is a leap year */
+		Assert`assertTrue(DateTime`isLeapYear(2004));
+		/* Checks if 2100 is not a leap year */
+		Assert`assertFalse(DateTime`isLeapYear(2100));
+		/* Checks if 2001 is not a leap year */
+		Assert`assertFalse(DateTime`isLeapYear(2001));
 		
-		private testGetters : () ==> ()
-		testGetters() == 
-		(
-			Assert`assertEqual(d.getDay(), 30);
-			Assert`assertEqual(d.getMonth(), 1);
-			Assert`assertEqual(d.getYear(), 2010);
-			Assert`assertEqual(d.getHour(), 10);
-			Assert`assertEqual(d.getMinute(), 25);
-			Assert`assertEqual(d.getSecond(), 5);
-			
-		);
+		/* Checks if DateTime for a leap year is being created correctly */
+		IO`println(new DateTime(29, 2, 2000));
+		/* Checks if DateTime for a not leap year is being created correctly */
+		IO`println(new DateTime(28, 2, 2001));
+		/* Checks if DateTime is being created correctly with day, month and year parameters */
+		IO`println(new DateTime(30, 6, 2001));
+		/* Checks if DateTime is being created correctly with day, month, year, hour, minute and second parameters */
+		IO`println(new DateTime(30, 6, 2001, 11, 30, 24));
+	);
+	
+	/*
+	 * Tests the getters for the DateTime class.
+	 */
+	private testGetters : () ==> ()
+	testGetters() == 
+	(
+		/* Checks if instance variable d.day is 30 */
+		Assert`assertEqual(d.getDay(), 30);
+		/* Checks if instance variable d.month is 1 */
+		Assert`assertEqual(d.getMonth(), 1);
+		/* Checks if instance variable d.year is 2010 */
+		Assert`assertEqual(d.getYear(), 2010);
+		/* Checks if instance variable d.hour is 10 */
+		Assert`assertEqual(d.getHour(), 10);
+		/* Checks if instance variable d.minute is 25 */
+		Assert`assertEqual(d.getMinute(), 25);
+		/* Checks if instance variable d.second is 5 */
+		Assert`assertEqual(d.getSecond(), 5);
 		
-		private testComparators : () ==> ()
-		testComparators() ==
-		(
-			let d1 : DateTime = new DateTime(1, 1, 2000), 
-				  d2 : DateTime = new DateTime(1, 1, 2010) in (
-				Assert`assertTrue(d1.isLessOrEqual(d2));
-				Assert`assertTrue(d1.isLessOrEqual(d1));
-				Assert`assertTrue(d2.isGreater(d1));
-			);
+	);
+	
+	/*
+	 * Tests the comparators for the DateTime class.
+	 */
+	private testComparators : () ==> ()
+	testComparators() ==
+	(
+		/* d1 - (1, 1, 2000) : d2 - (1, 1, 2010) */
+		let d1 : DateTime = new DateTime(1, 1, 2000), 
+			  d2 : DateTime = new DateTime(1, 1, 2010) in (
+			/* Checks if DateTime d1 is less or equal then DateTime d2 */
+			Assert`assertTrue(d1.isLessOrEqual(d2));
+			/* Checks if DateTime d1 is less or equal then DateTime d1 */
+			Assert`assertTrue(d1.isLessOrEqual(d1));
+			/* Checks if DateTime d2 is greater then DateTime d1 */
+			Assert`assertTrue(d2.isGreater(d1));
 		);
-		
-		public static main: () ==> ()
-    main() ==
-    (
-    	let dt : DateTimeTest = new DateTimeTest() in (
-      	dt.testLeapYear();
-      	dt.testGetters();
-      	dt.testComparators();
-      );
+	);
+	
+	/*
+	 * Calls the tests.
+	 */
+	public static main: () ==> ()
+  main() ==
+  (
+  	let dt : DateTimeTest = new DateTimeTest() in (
+    	dt.testLeapYear();
+    	dt.testGetters();
+    	dt.testComparators();
     );
+  );
 
 end DateTimeTest
