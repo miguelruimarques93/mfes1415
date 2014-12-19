@@ -138,6 +138,7 @@ operations
 							
 		)))));
 		
+		-------Additional test for full coverage (logging access request will fail and print an error to the console
 		let pacs2: PhysicalAccessControlSystem = new PhysicalAccessControlSystem("////////////") in (
 			let u: PhysicalAccessControlSystem`User = pacs2.createNewUser("Miguel") in (
 				let bb: PhysicalAccessControlSystem`Facility = pacs2.createNewFacility("Building B") in (
