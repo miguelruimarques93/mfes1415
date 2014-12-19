@@ -1,121 +1,134 @@
 class PhysicalAccessControlSystemTest
+
+-------------------------------------
+-- PhysicalAccessControlSystemTest --
+-------------------------------------
+--           Description           --
+-- - - - - - - - - - - - - - - - - --
+--   Test class for PhysicalAccess --
+-- ControlSystem.                  --
+-------------------------------------
+
 instance variables
 
 operations
 
-		public static main: () ==> ()
-		main() ==
-		(
-			
-			let pacs: PhysicalAccessControlSystem = new PhysicalAccessControlSystem("Test.log") in (
+	/*
+ 	 * Calls the tests.
+ 	 */ 
+	public static main: () ==> ()
+	main() ==
+	(
+		
+		let pacs: PhysicalAccessControlSystem = new PhysicalAccessControlSystem("Test.log") in (
+			IO`println(pacs);
+			let user: PhysicalAccessControlSystem`User = pacs.createNewUser("Miguel"),
+				  user1: PhysicalAccessControlSystem`User = pacs.createNewUser("Cleto") in ( 
 				IO`println(pacs);
-				let user: PhysicalAccessControlSystem`User = pacs.createNewUser("Miguel"),
-					  user1: PhysicalAccessControlSystem`User = pacs.createNewUser("Cleto") in ( 
+				IO`println(user);
+				let buildB: PhysicalAccessControlSystem`Facility = pacs.createNewFacility("Building B") in (
 					IO`println(pacs);
-					IO`println(user);
-					let buildB: PhysicalAccessControlSystem`Facility = pacs.createNewFacility("Building B") in (
+					IO`println(buildB);	
+					let ac: AccessCard = pacs.createNewAccessCard(),
+							ac1: AccessCard = pacs.createNewTemporaryAccessCard(new DateTime(15, 12, 2014))
+					 in (
 						IO`println(pacs);
-						IO`println(buildB);	
-						let ac: AccessCard = pacs.createNewAccessCard(),
-								ac1: AccessCard = pacs.createNewTemporaryAccessCard(new DateTime(15, 12, 2014))
-						 in (
+						IO`println(ac);	
+						let ap: AccessPoint = pacs.createNewAccessPoint(buildB) in (
 							IO`println(pacs);
-							IO`println(ac);	
-							let ap: AccessPoint = pacs.createNewAccessPoint(buildB) in (
-								IO`println(pacs);
-								IO`println(ap);	
-			
-								pacs.associateAccessCardToUser(ac, user);
-								pacs.associateAccessCardToUser(ac1, user1);
+							IO`println(ap);	
+		
+							pacs.associateAccessCardToUser(ac, user);
+							pacs.associateAccessCardToUser(ac1, user1);
+							
+							IO`println(pacs);
+							pacs.addAccessRuleToAccessPoint(ap, new AccessRule("Building B", "Miguel", <deny>));
+							IO`println(pacs);
+		
+							Assert`assertFalse(pacs.requestAccess(ac, ap, new DateTime(16, 12, 2014)));
+							
+							pacs.addAccessRuleToAccessPoint(ap, new AccessRule("Building B", "Miguel", <allow>));
+							
+							Assert`assertTrue(pacs.requestAccess(ac, ap, new DateTime(16, 12, 2014)));
+							
+							pacs.removeUserAccessCard(user);
+							pacs.transferUserAccessCard(user1, user);
+							
+							Assert`assertFalse(pacs.requestAccess(ac, ap, new DateTime(16, 12, 2014)));
+							
+							pacs.removeAccessCard(ac);
+							pacs.removeUser(user1);
+							
+							Assert`assertFalse(pacs.requestAccess(ac1, ap, new DateTime(16, 12, 2014)));
+							Assert`assertTrue(pacs.requestAccess(ac1, ap, new DateTime(14, 12, 2014)));
+							
+							ac1.removeExpirationDate();
+							
+							Assert`assertTrue(pacs.requestAccess(ac1, ap, new DateTime(16, 12, 2014)));
+							Assert`assertTrue(pacs.requestAccess(ac1, ap, new DateTime(14, 12, 2014)));
+							
+							let ap1: AccessPoint = pacs.createNewAccessPoint(buildB) in (
+								Assert`assertTrue(ap1.getId() > ap.getId());
+							);
+							
+							pacs.createNewGroupOfUsers("Students"); --post condition ensures group exists
+							
+							pacs.removeGroupOfUsers("Students"); --post condition ensures group does not exist
+							
+							pacs.createNewGroupOfUsers("Students");
+							
+							pacs.addUserToGroupOfUsers("Students", user); --post condition ensures member is added 
+							
+							pacs.addAccessRuleToAccessPoint(ap, new AccessRule("Building B", "Miguel", <deny>));
+							Assert`assertFalse(pacs.requestAccess(ac1, ap, new DateTime(16, 12, 2014)));
+							pacs.addAccessRuleToAccessPoint(ap, new AccessRule("Building B", "Students", <allow>));
+							
+							Assert`assertTrue(pacs.requestAccess(ac1, ap, new DateTime(16, 12, 2014)));
+							
+							pacs.removeUserFromGroupOfUsers("Students", user);
+							
+							Assert`assertFalse(pacs.requestAccess(ac1, ap, new DateTime(16, 12, 2014)));
+							
+							let fac: PhysicalAccessControlSystem`Facility = pacs.createNewFacility("Secretaria") in (
+								pacs.removeFacility(fac);
+							);
+							
+							let fac: PhysicalAccessControlSystem`Facility = pacs.createNewFacility("Secretaria") in (
+								pacs.createNewGroupOfFacilities("FEUP");
+								pacs.removeGroupOfFacilities("FEUP");
 								
-								IO`println(pacs);
-								pacs.addAccessRuleToAccessPoint(ap, new AccessRule("Building B", "Miguel", <deny>));
-								IO`println(pacs);
-			
-								Assert`assertFalse(pacs.requestAccess(ac, ap, new DateTime(16, 12, 2014)));
+								pacs.createNewGroupOfFacilities("FEUP");
+								pacs.addFacilityToGroupOfFacilities("FEUP", fac);
+								pacs.addFacilityToGroupOfFacilities("FEUP", buildB);
 								
-								pacs.addAccessRuleToAccessPoint(ap, new AccessRule("Building B", "Miguel", <allow>));
-								
-								Assert`assertTrue(pacs.requestAccess(ac, ap, new DateTime(16, 12, 2014)));
-								
-								pacs.removeUserAccessCard(user);
-								pacs.transferUserAccessCard(user1, user);
-								
-								Assert`assertFalse(pacs.requestAccess(ac, ap, new DateTime(16, 12, 2014)));
-								
-								pacs.removeAccessCard(ac);
-								pacs.removeUser(user1);
-								
-								Assert`assertFalse(pacs.requestAccess(ac1, ap, new DateTime(16, 12, 2014)));
-								Assert`assertTrue(pacs.requestAccess(ac1, ap, new DateTime(14, 12, 2014)));
-								
-								ac1.removeExpirationDate();
-								
-								Assert`assertTrue(pacs.requestAccess(ac1, ap, new DateTime(16, 12, 2014)));
-								Assert`assertTrue(pacs.requestAccess(ac1, ap, new DateTime(14, 12, 2014)));
-								
-								let ap1: AccessPoint = pacs.createNewAccessPoint(buildB) in (
-									Assert`assertTrue(ap1.getId() > ap.getId());
-								);
-								
-								pacs.createNewGroupOfUsers("Students"); --post condition ensures group exists
-								
-								pacs.removeGroupOfUsers("Students"); --post condition ensures group does not exist
-								
-								pacs.createNewGroupOfUsers("Students");
-								
-								pacs.addUserToGroupOfUsers("Students", user); --post condition ensures member is added 
-								
-								pacs.addAccessRuleToAccessPoint(ap, new AccessRule("Building B", "Miguel", <deny>));
-								Assert`assertFalse(pacs.requestAccess(ac1, ap, new DateTime(16, 12, 2014)));
-								pacs.addAccessRuleToAccessPoint(ap, new AccessRule("Building B", "Students", <allow>));
-								
-								Assert`assertTrue(pacs.requestAccess(ac1, ap, new DateTime(16, 12, 2014)));
-								
-								pacs.removeUserFromGroupOfUsers("Students", user);
-								
-								Assert`assertFalse(pacs.requestAccess(ac1, ap, new DateTime(16, 12, 2014)));
-								
-								let fac: PhysicalAccessControlSystem`Facility = pacs.createNewFacility("Secretaria") in (
-									pacs.removeFacility(fac);
-								);
-								
-								let fac: PhysicalAccessControlSystem`Facility = pacs.createNewFacility("Secretaria") in (
-									pacs.createNewGroupOfFacilities("FEUP");
+								pacs.addUserToGroupOfUsers("Students", user);
+								let ap3: AccessPoint = pacs.createNewAccessPoint(fac) in (
+									pacs.addAccessRuleToAccessPoint(ap3, new AccessRule("FEUP", "Students", <allow>));
+									Assert`assertTrue(pacs.requestAccess(ac1, ap3, new DateTime(16, 12, 2014)));
+									pacs.removeFacilityFromGroup("FEUP",fac);
+									Assert`assertFalse(pacs.requestAccess(ac1, ap3, new DateTime(16, 12, 2014)));
+									
+									pacs.removeFacility(buildB);
 									pacs.removeGroupOfFacilities("FEUP");
-									
-									pacs.createNewGroupOfFacilities("FEUP");
-									pacs.addFacilityToGroupOfFacilities("FEUP", fac);
-									pacs.addFacilityToGroupOfFacilities("FEUP", buildB);
-									
-									pacs.addUserToGroupOfUsers("Students", user);
-									let ap3: AccessPoint = pacs.createNewAccessPoint(fac) in (
-										pacs.addAccessRuleToAccessPoint(ap3, new AccessRule("FEUP", "Students", <allow>));
-										Assert`assertTrue(pacs.requestAccess(ac1, ap3, new DateTime(16, 12, 2014)));
-										pacs.removeFacilityFromGroup("FEUP",fac);
-										Assert`assertFalse(pacs.requestAccess(ac1, ap3, new DateTime(16, 12, 2014)));
-										
-										pacs.removeFacility(buildB);
-										pacs.removeGroupOfFacilities("FEUP");
-										pacs.removeAccessPoint(ap3); --post condition ensures access point is removed
-									);
+									pacs.removeAccessPoint(ap3); --post condition ensures access point is removed
 								);
-								
-			)))));
-			
-			let pacs2: PhysicalAccessControlSystem = new PhysicalAccessControlSystem("////////////") in (
-				let u: PhysicalAccessControlSystem`User = pacs2.createNewUser("Miguel") in (
-					let bb: PhysicalAccessControlSystem`Facility = pacs2.createNewFacility("Building B") in (
-						let acc: AccessCard = pacs2.createNewAccessCard() in (
+							);
+							
+		)))));
+		
+		let pacs2: PhysicalAccessControlSystem = new PhysicalAccessControlSystem("////////////") in (
+			let u: PhysicalAccessControlSystem`User = pacs2.createNewUser("Miguel") in (
+				let bb: PhysicalAccessControlSystem`Facility = pacs2.createNewFacility("Building B") in (
+					let acc: AccessCard = pacs2.createNewAccessCard() in (
 
-							let app: AccessPoint = pacs2.createNewAccessPoint(bb) in (
-			
-								pacs2.associateAccessCardToUser(acc, u);
-								
-								pacs2.addAccessRuleToAccessPoint(app, new AccessRule("Building B", "Miguel", <deny>));
-			
-								Assert`assertFalse(pacs2.requestAccess(acc, app, new DateTime(16, 12, 2014)));
-			)))));
-		);
+						let app: AccessPoint = pacs2.createNewAccessPoint(bb) in (
+		
+							pacs2.associateAccessCardToUser(acc, u);
+							
+							pacs2.addAccessRuleToAccessPoint(app, new AccessRule("Building B", "Miguel", <deny>));
+		
+							Assert`assertFalse(pacs2.requestAccess(acc, app, new DateTime(16, 12, 2014)));
+		)))));
+	);
 
 end PhysicalAccessControlSystemTest
