@@ -67,7 +67,7 @@ instance variables
 operations
 
 	/*
-	 * PhysicalAccessControlSystem with filename.
+	 * PhysicalAccessControlSystem constructor with filename.
 	 *
 	 * @param filename - a String with the desire log filename
 	 *
@@ -89,8 +89,9 @@ operations
 	log(val) == if not io.fecho(logFilename, val ^ "\n" , <append>) then IO`println("Error writing message to log file: " ^ val);
 
 	/*
-	 *
+	 * Creates an AccessCard and adds it to the accessCards set.
 	 * 
+	 * @return AccessCard
 	 */
 	public createNewAccessCard: () ==> AccessCard
 	createNewAccessCard() == (
@@ -101,6 +102,13 @@ operations
 		);
 	);
 	
+	/*
+	 * Creates a temporary AccessCard and adds it to the accessCards set.
+	 * 
+	 * @param expDate - desired expiration date for the created accesscard
+	 *
+	 * @return AccessCard with the expirationDate set to the param value
+	 */
 	public createNewTemporaryAccessCard: DateTime ==> AccessCard
 	createNewTemporaryAccessCard(expDate) == (
 		let newCard: AccessCard = createNewAccessCard() in (
@@ -109,6 +117,11 @@ operations
 		);
 	);
 	
+	/*
+	 * Removes an AccessCard from accessCards set and from accessCardUser map domain.
+	 * 
+	 * @param ac - the accesscard to be removed
+	 */
 	public removeAccessCard: AccessCard ==> ()
 	removeAccessCard(ac) == (
 		accessCards := accessCards \ { ac };
@@ -118,6 +131,13 @@ operations
 	post not ac in set accessCards and
 			 not ac in set dom accessCardUser;
 	
+	/*
+	 * Creates a User and adds it to the users set and the groupUsers map.
+	 *
+	 * @param name - the new user desired name
+	 *
+	 * return User with the name set to the param value
+	 */
 	public createNewUser : Utils`String ==> User
 	createNewUser(name) == (
 		let user = mk_User(name) in (
@@ -128,6 +148,11 @@ operations
 	)
 	pre let u = mk_User(name) in u not in set users;
 	
+	/*
+	 * Removes a User from users, from every user group is in, from is own user group and removes every rule associated with his own user group.
+	 *
+	 * @param user - User to be removed
+	 */
 	public removeUser: User ==> ()
 	removeUser(user) == (
 		users := users \ { user };
@@ -145,6 +170,12 @@ operations
 			 not user in set rng accessCardUser and
 			 not user in set dunion rng groupUsers;
 	
+	/*
+	 * Associates a given AccessCard with a given User.
+	 *
+	 * @param ac - AccessCard to be associated to
+	 * @param user - User to associate with
+	 */
 	public associateAccessCardToUser: AccessCard * User ==> ()
 	associateAccessCardToUser(ac, user) == (
 		accessCardUser := accessCardUser munion { ac |-> user };
@@ -153,6 +184,11 @@ operations
 				user not in set rng accessCardUser and 
 				ac not in set dom accessCardUser;
 	
+	/*
+	 * Removes the AccessCard associated with a given User.
+	 *
+	 * @param user - User from which the accessCard will be removed
+	 */
 	public removeUserAccessCard: User ==> ()
 	removeUserAccessCard(user) == (
 		accessCardUser := accessCardUser :-> { user };
@@ -166,6 +202,11 @@ operations
 		);	
 	);
 	
+	/*
+	 * Creates a new group of users and adds it to the groupUsers map.
+	 *
+	 * @param name - desired group user name
+	 */
 	public createNewGroupOfUsers : Utils`String ==> ()
 	createNewGroupOfUsers(name) == (
 		groupUsers := groupUsers munion { name |-> { } };
@@ -173,6 +214,11 @@ operations
 	pre not name in set dom groupUsers
 	post name in set dom groupUsers;
 	
+	/*
+	 * Removes a group of users from the groupUsers map and every rule associated with it.
+	 *
+	 * @param name - name of the user group to be removed
+	 */
 	public removeGroupOfUsers : Utils`String ==> ()
 	removeGroupOfUsers(name) == (
 		groupUsers := { name } <-: groupUsers;
@@ -183,6 +229,12 @@ operations
 	pre name in set dom groupUsers
 	post not name in set dom groupUsers;
 	
+	/*
+	 * Adds a user to a group of users.
+	 *
+	 * @param groupName - user group name to which the user will be added
+	 * @param user - user that will be added
+	 */
 	public addUserToGroupOfUsers : Utils`String * User ==> ()
 	addUserToGroupOfUsers(groupName, user) == (
 		groupUsers(groupName) := groupUsers(groupName) union { user };
@@ -191,6 +243,12 @@ operations
 	and user in set users
 	post user in set groupUsers(groupName);
 	
+	/*
+	 * Removes a user from a group of users.
+	 *
+	 * @param groupName - user group name from which the user will be removed
+	 * @param user - user that will be removed
+	 */
 	public removeUserFromGroupOfUsers : Utils`String * User ==> ()
 	removeUserFromGroupOfUsers(groupName, user) == (
 		groupUsers(groupName) := groupUsers(groupName) \ { user };
@@ -199,6 +257,13 @@ operations
 			user in set groupUsers(groupName)
 	post groupName in set dom groupUsers => not user in set groupUsers(groupName);
 
+	/*
+	 * Creates a new facility with a given name.
+	 *
+	 * @param name - desired facility name
+	 *
+	 * @return Facility with the name set to the given param
+	 */
 	public createNewFacility: Utils`String ==> Facility
 	createNewFacility(name) == (
 		let fac = mk_Facility(name) in (
@@ -209,6 +274,11 @@ operations
 	)
 	pre let f = mk_Facility(name) in f not in set facilities;
 	
+	/*
+	 * Removes a facility from the groupFacilities map and every rule associated with it.
+	 *
+	 * @param fac - facility that will be removed
+	 */
 	public removeFacility: Facility ==> ()
 	removeFacility(fac) == (
 		facilities := facilities \ { fac };
@@ -226,12 +296,22 @@ operations
 			 not fac in set { ap.facility | ap in set dom accessPolicies } and
 			 not fac in set dunion rng groupFacilities;
 	
+	/*
+	 * Creates a new group of facilities with a given name.
+	 *
+	 * @param name - desired group of facilities name
+	 */
 	public createNewGroupOfFacilities : Utils`String ==> ()
 	createNewGroupOfFacilities(name) == (
 		groupFacilities := groupFacilities munion { name |-> { } };
 	)
 	pre not name in set dom groupFacilities;
 	
+	/*
+	 * Removes a group of facilities and every rule associated with it.
+	 *
+	 * @param name - name of the group of facilities to be removed
+	 */
 	public removeGroupOfFacilities : Utils`String ==> ()
 	removeGroupOfFacilities(name) == (
 		groupFacilities := { name } <-: groupFacilities;
@@ -242,13 +322,25 @@ operations
 	pre name in set dom groupFacilities
 	post not name in set dom groupFacilities;
 	
+	/*
+	 * Adds a facility to a group of facilities.
+	 *
+	 * @param groupName - facilities group name to which the facility will be added
+	 * @param fac - facility that will be added
+	 */
 	public addFacilityToGroupOfFacilities : Utils`String * Facility ==> ()
 	addFacilityToGroupOfFacilities(groupName, fac) == (
 		groupFacilities(groupName) := groupFacilities(groupName) union { fac };
 	)
 	pre groupName in set dom groupFacilities and 
 			fac in set facilities;
-			
+	
+	/*
+	 * Removes a facility from a group of facilities.
+	 *
+	 * @param groupName - facilities group name from which the facility will be removed
+	 * @param fac - facility that will be removed
+	 */
 	public removeFacilityFromGroup : Utils`String * Facility ==> ()
 	removeFacilityFromGroup(groupName, fac) == (
 		groupFacilities(groupName) := groupFacilities(groupName) \ { fac };
@@ -258,6 +350,13 @@ operations
 			fac in set groupFacilities(groupName)
 	post groupName in set dom groupFacilities => not fac in set groupFacilities(groupName);
 	
+	/*
+	 * Creates a new Accesspoint in a Facility.
+	 *
+	 * @param fac - facility to which the accesspoint will be added
+	 *
+	 * @return the created AccessPoint
+	 */
 	public createNewAccessPoint: Facility ==> AccessPoint
 	createNewAccessPoint(fac) == (
 		lastAccessPointId := lastAccessPointId + 1;
@@ -268,6 +367,11 @@ operations
 	)
 	pre fac in set facilities;
 	
+	/*
+	 * Removes an AccessPoint and every rule associated with it.
+	 *
+	 * @param ap - accesspoint that will be removed
+	 */
 	public removeAccessPoint: AccessPoint ==> ()
 	removeAccessPoint(ap) == (
 		accessPolicies := { ap } <-: accessPolicies;
@@ -275,6 +379,12 @@ operations
 	pre ap in set dom accessPolicies
 	post not ap in set dom accessPolicies;
 	
+	/*
+	 * Adds a given AccessRule to a given AccessPoint
+	 *
+	 * @param ap - accesspoint to which the accessrule will be added
+	 * @param ar - accessrule that will be added to the accesspoint
+	 */
 	public addAccessRuleToAccessPoint: AccessPoint * AccessRule ==> ()
 	addAccessRuleToAccessPoint(ap, ar) == (
 		accessPolicies(ap) := accessPolicies(ap) ^ [ ar ] 
@@ -301,6 +411,15 @@ operations
 		)
 	);
 	
+	/*
+	 * Request access.
+	 *
+	 * @param ac - the accesscard that requests access
+	 * @param accessPoint - the accesspoint from which the request is sent
+	 * @param date - the date of the request
+	 *
+	 * @return true if the access was granted or false otherwise 
+	 */
 	public requestAccess : AccessCard * AccessPoint * DateTime ==> bool
 	requestAccess(ac, accessPoint, date) == (
 		let result = requestAccessImpl(ac, accessPoint, date) in (
