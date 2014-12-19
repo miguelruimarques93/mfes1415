@@ -1,31 +1,47 @@
 class TestAll
-	operations
-		public static main: () ==> ()
-    main() ==
-    (
-    	IO`println(" ");
-    	IO`println("**");
-    	IO`println("** DateTimeTest");
-    	IO`println("**");
-    	DateTimeTest`main();
-    	
-    	IO`println(" ");
-    	IO`println("**");
-    	IO`println("** AccessCardTest");
-    	IO`println("**");
-    	AccessCardTest`main();
-    	
-    	IO`println(" ");
-    	IO`println("**");
-    	IO`println("** AccessRuleTest");
-    	IO`println("**");
-    	AccessRuleTest`main();
-    	
-    	IO`println(" ");
-    	IO`println("**");
-    	IO`println("** PhysicalAccessControlSystemTest");
-    	IO`println("**");
-    	PhysicalAccessControlSystemTest`main();
-    );
+
+-------------------------------------
+--             TestAll             --
+-------------------------------------
+--           Description           --
+-- - - - - - - - - - - - - - - - - --
+--   Class responsible for calling --
+-- all the classes tests.          --
+-------------------------------------
+
+operations
+
+	/* Calls the tests. */
+	public static main: () ==> ()
+  main() ==
+  (
+  	IO`println(" ");
+  	IO`println("**");
+  	IO`println("** DateTimeTest");
+  	IO`println("**");
+  	/* Calls the DateTimeTest main which calls the DateTime class tests */
+  	DateTimeTest`main();
+  	
+  	IO`println(" ");
+  	IO`println("**");
+  	IO`println("** AccessCardTest");
+  	IO`println("**");
+  	/* Calls the AccessCardTest main which calls the AccessCard class tests */
+  	AccessCardTest`main();
+  	
+  	IO`println(" ");
+  	IO`println("**");
+  	IO`println("** AccessRuleTest");
+  	IO`println("**");
+  	/* Calls the AccessRuleTest main which calls the AccessRule class tests */
+  	AccessRuleTest`main();
+  	
+  	IO`println(" ");
+  	IO`println("**");
+  	IO`println("** PhysicalAccessControlSystemTest");
+  	IO`println("**");
+  	/* Calls the PhysicalAccessControlSystemTest main which calls the PhysicalAccessControlSystem class tests */
+  	PhysicalAccessControlSystemTest`main();
+  );
 
 end TestAll

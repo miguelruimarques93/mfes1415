@@ -1,33 +1,60 @@
 class AccessCardTest
-	instance variables
-		ac: AccessCard := new AccessCard(0, new DateTime(31, 12, 2014));
-	operations
-		
-		private testValidCard: () ==> ()
-		testValidCard() ==
-		(
-			
-			Assert`assertTrue(ac.isValid(new DateTime(31, 12, 2014)));
-			Assert`assertFalse(ac.isValid(new DateTime(1, 1, 2015)));
-			Assert`assertTrue(ac.isValid(new DateTime(30, 12, 2014)));
-			Assert`assertTrue(ac.isValid(new DateTime(31, 10, 2014)));
-			Assert`assertTrue(ac.isValid(new DateTime(31, 12, 2013)));
-		);
-		
-		private testGetters : () ==> ()
-		testGetters() == 
-		(
-			Assert`assertEqual(ac.getID(), 0);
-			Assert`assertTrue(ac.getExpirationDate().isEqual(new DateTime(31, 12, 2014)));
-		);
-		
-		public static main: () ==> ()
-    main() ==
-    (
-      let ac1 : AccessCardTest = new AccessCardTest() in (
-      	ac1.testValidCard();
-      	ac1.testGetters();
-      );
+
+-------------------------------------
+--          AccessCardTest         --
+-------------------------------------
+--           Description           --
+-- - - - - - - - - - - - - - - - - --
+--   Test class for AccessCard.    --
+-------------------------------------
+
+instance variables
+
+	/* AccessCard */
+	ac: AccessCard := new AccessCard(0, new DateTime(31, 12, 2014));
+	
+operations
+	
+	/*
+	 * Tests the card validation with every possible combination.
+	 */
+	private testValidCard: () ==> ()
+	testValidCard() ==
+	(
+		/* Checks if ac expiration date is valid for DateTime - (31, 12, 2014) */
+		Assert`assertTrue(ac.isValid(new DateTime(31, 12, 2014)));
+		/* Checks if ac expiration date is not valid for DateTime - (1, 1, 2015) */
+		Assert`assertFalse(ac.isValid(new DateTime(1, 1, 2015)));
+		/* Checks if ac expiration date is valid for DateTime - (30, 12, 2014) */
+		Assert`assertTrue(ac.isValid(new DateTime(30, 12, 2014)));
+		/* Checks if ac expiration date is valid for DateTime - (31, 10, 2014) */
+		Assert`assertTrue(ac.isValid(new DateTime(31, 10, 2014)));
+		/* Checks if ac expiration date is valid for DateTime - (31, 12, 2013) */
+		Assert`assertTrue(ac.isValid(new DateTime(31, 12, 2013)));
+	);
+	
+	/*
+	 * Tests the getters for the AccessCard class.
+	 */
+	private testGetters : () ==> ()
+	testGetters() == 
+	(
+		/* Checks if ac id was set to 0 */
+		Assert`assertEqual(ac.getID(), 0);
+		/* Checks if ac expirationDate was set to DateTime - (31, 12, 2014) */
+		Assert`assertTrue(ac.getExpirationDate().isEqual(new DateTime(31, 12, 2014)));
+	);
+	
+	/*
+	 * Calls the tests.
+	 */ 
+	public static main: () ==> ()
+  main() ==
+  (
+    let ac1 : AccessCardTest = new AccessCardTest() in (
+    	ac1.testValidCard();
+    	ac1.testGetters();
     );
+  );
     
 end AccessCardTest
